@@ -1,0 +1,251 @@
+\documentclass[a4paper]{scrreprt}
+\usepackage{hyperref}
+\usepackage{import}
+\usepackage{appendix}
+\usepackage{enumitem}
+\usepackage{subcaption}
+\usepackage{floatrow}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\import{G:/this_semester/latex/}{046201.sty}
+\graphicspath{{G:/this_semester/086761/hw4/}}
+
+\usepackage{verbatim}
+
+\usepackage{tikz}
+\usetikzlibrary{bayesnet}
+
+\usepackage{etoolbox}
+%\makeatletter
+%\patchcmd{\chapter}{\if@openright\cleardoublepage\else\clearpage\fi}{}{}{}
+%\makeatother
+\makeatletter
+\patchcmd{\scr@startchapter}{\if@openright\cleardoublepage\else\clearpage\fi}{}{}{}
+\makeatother
+
+%\DeclareMathOperator*{\argmin}{arg\,min}
+%\DeclareMathOperator*{\argmax}{arg\,max}
+
+\newcommand{\group}[1]{%
+  \par\noindent\textbf{#1:}
+}
+
+\renewcommand{\thesubsection}{\arabic{chapter}.\arabic{section}.\arabic{subsection}}
+
+\title{086761 - Homework 1}
+%\subtitle{Efficient Marginal Likelihood Optimization in Blind Deconvolution - 
+%A.Levin, Y.Weiss, F.Durand, W.T.Freeman}
+\author{Yuri Feldman, 309467801}
+\begin{document}
+\maketitle
+%\tableofcontents
+%\newpage
+\chapter{}
+\section{}
+\begin{gather}
+	f_x(x) = \frac{1}{\sqrt{\abs{2\pi\Sigma_x}}} \cdot 
+	e^{-\frac{1}{2}(x-\mu_x)^T\Sigma_x^{-1} (x-\mu_x)}
+\end{gather}
+\section{}
+$\mu_y$, $\Sigma_y$ can be calculated using expectation properties (and do not 
+depend on $y$ being Gaussian):
+\begin{gather}
+	\mu_y = \expect Ax + b = A\expect x + b = \boxed{A\mu_x + b} \\
+	\Sigma_y = \expect\left[ (Ax+b-\mu_y)(Ax+b-\mu_y)^T\right] = 
+	\expect\left[ A(x-\mu_x)(x-\mu_x)^T A^T \right] = \\
+	A\expect\left[ 
+	(x-\mu_x)(x-\mu_x)^T\right] A^T = \boxed{A\Sigma_x A^T}
+\end{gather}
+Next, we show that $y$ is Gaussian. In the case where $A$ is invertible this 
+can be directly obtained from random vector transformation formula (1-to-1 
+transformation). Since $y=Ax+b$ the Jacobian matrix is $A$ and since the 
+mapping is one-to-one (A is invertible) according to the transformation 
+theorem: 
+\begin{gather}
+	f_Y(y) = \frac{1}{\abs{A}} f_X(A^{-1}(y-b))
+\end{gather}
+ignoring the constant normalization factors (since they don't depend on $x$ and 
+only guarantee the distributions' summing to 1) we calculate the exponent in 
+the 
+right hand side: 
+\begin{gather}
+	-\frac{1}{2}\left(A^{-1}(y-b)-\mu_x\right)^T\Sigma_x^{-1}\left(A^{-1}(y-b)-\mu_x\right)
+	 = \\
+	-\frac{1}{2}\left(y-b-A\mu_x\right)^TA^{-T}\Sigma_x^{-1}A^{-1}\left(y-b-A\mu_x\right)
+	 = \\
+		-\frac{1}{2}\left(y-(A\mu_x+b)\right)^T\left(A\Sigma_xA^T\right)^{-1}\left(y-(A\mu_x+b)\right),
+\end{gather}
+which exactly gives a Gaussian distribution (in particular, with the mean and 
+variance we calculated beforehand). 
+
+We now deal with the case where $A\in \mathbb{R}^{m\times n}$ is not invertible 
+- either rectangular or 
+square with zero determinant. 
+Consider the SVD decomposition of $A$: 
+\begin{gather}
+	A = U \Sigma V^T
+\end{gather}
+Here, $U$ and $V$ are square invertible matrices of respective sizes $m\times 
+m$ and $n\times n$. Note that $V^T=V^\ast$ as $A$ is real. 
+$\Sigma$ is a rectangular matrix the same size as $A$ with 
+the main diagonal containing the singular values (and zero elsewhere). We can 
+now write: 
+\begin{gather}
+	y = U\Sigma V^Tx + b
+\end{gather}
+Here, $V^Tx$ is Gaussian, since $V$ is invertible. Without loss of generality 
+denote 
+\begin{gather}
+	\Sigma = \begin{pmatrix}
+	\Sigma_1 & 0 \\ 0 & 0
+	\end{pmatrix} \qquad V^Tx = \begin{pmatrix}
+	v_1 \\ v_2
+	\end{pmatrix},
+\end{gather}
+where $\Sigma_1$ is (square) diagonal, with positive entries (and in 
+particular, is 
+invertible), and has the same number of columns as the length of vector $v_1$. 
+We have then that 
+\begin{gather}
+	\Sigma V^T x = \begin{pmatrix}
+	\Sigma_1 v_1 \\ 0
+	\end{pmatrix}, 
+\end{gather}
+where $\Sigma_1 v_1$ is Gaussian since $v_1$ is and $\Sigma_1$ is invertible, 
+and hence $\Sigma V^T x =U^T (y-b)$ is (possibly degenerate) Gaussian (and 
+hence, 
+so is $y$). 
+
+\chapter{}
+\section{}
+\begin{gather}
+	p(x\mid z) = \frac{p(z\mid x) p(x)}{p(z)} = \frac{p(z\mid x) p(x)}{\int_x 
+	p(z\mid x) p(x)\cdot dx} \propto p(z\mid x)\cdot p(x)
+\end{gather}
+
+\section{}
+We are interested in the MAP estimate: 
+\begin{gather}
+	x^{\ast}_{_{MAP}}\doteq \argmax_x p(x\mid z) = \argmax_x p(z\mid 
+	x)\cdot p(x) 
+	= \argmax_x \log 
+	p(z\mid x) + \log p(x) = \\
+	\argmin_x \nrm{z-Hx}^2_{R} + 
+	\nrm{x-x_0}^2_{\Sigma_0}
+\end{gather}
+Develop the latter: 
+\begin{gather}
+	\nrm{z-Hx}^2_{R} + 
+		\nrm{x-x_0}^2_{\Sigma_0} = 	\nrm{R^{-1/2}(Hx-z)}^2 + 
+				\nrm{\Sigma_0^{-1/2}(x-x_0)}^2 = \\
+			\nrm{\begin{pmatrix}
+			R^{-1/2}(Hx-z) \\
+			\Sigma_0^{-1/2}(x-x_0)
+			\end{pmatrix}}^2  = 
+			\nrm{\begin{pmatrix}
+						R^{-1/2}H \\
+						\Sigma_0^{-1/2}
+						\end{pmatrix} x - \begin{pmatrix}
+						R^{-1/2}z \\ \Sigma_0^{-1/2}x_0
+						\end{pmatrix}}^2, 
+\end{gather}
+from where $x^{\ast}_{_{MAP}}$ can be obtained as the least-squares solution 
+using the pseudoinverse 
+$A^\dagger b=(A^TA)^{-1}A^Tb$, or equivalently proceed directly, noting that 
+the 
+function 
+is convex 
+and has a unique extremum which is the minimum. Develop the above into: 
+\begin{gather}	
+		= x^T\left(H^TR^{-1}H+\Sigma_0^{-1}\right)x 
+		-2\left(z^TR^{-1}H+x_0^T\Sigma_0^{-1}\right)x + 
+		\left(z^TR^{-1}z+x_0^T\Sigma_0^{-1}x_0\right)
+		\label{eq:2b:quadratic-form}
+\end{gather}
+find the zero of the gradient: 
+\begin{gather}
+	\nabla (\cdot) = 
+	2\left(H^TR^{-1}H+\Sigma_0^{-1}\right)x^\ast-2\left(\Sigma_0^{-1}x_0+H^TR^{-1}z\right)
+	 =0 \\
+	\Longrightarrow \boxed{x^\ast_{_{MAP}} = 
+	\left(H^TR^{-1}H+\Sigma_0^{-1}\right)^{-1}\left(\Sigma_0^{-1}x_0+H^TR^{-1}z\right)}
+\end{gather}
+The associated covariance is
+\begin{gather}
+	\boxed{\Sigma=\left(H^TR^{-1}H+\Sigma_0^{-1}\right)^{-1}},
+\end{gather}
+ as can be seen from the quadratic term in 
+Eq.(\ref{eq:2b:quadratic-form}). 
+
+
+
+\chapter{Code}
+
+%\begin{gather}
+%	\phi \psi
+%\end{gather}
+\begin{gather}
+ 	\left(\begin{array}{ccc} 
+ 	\cos\left(\psi\right)\,\cos\left(\theta\right) & 
+ 	\cos\left(\psi\right)\,\sin\left(\phi 
+ 	\right)\,\sin\left(\theta\right)-\cos\left(\phi 
+ 	\right)\,\sin\left(\psi\right) & \sin\left(\phi 
+ 	\right)\,\sin\left(\psi\right)+\cos\left(\phi 
+ 	\right)\,\cos\left(\psi\right)\,\sin\left(\theta\right)\\ 
+ 	\cos\left(\theta\right)\,\sin\left(\psi\right) & 
+ 	\cos\left(\phi \right)\,\cos\left(\psi\right)+\sin\left(\phi 
+ 	\right)\,\sin\left(\psi\right)\,\sin\left(\theta\right) & 
+ 	\cos\left(\phi 
+\right)\,\sin\left(\psi\right)\,\sin\left(\theta\right)-\cos\left(\psi\right)\,\sin\left(\phi
+ 	 \right)\\ -\sin\left(\theta\right) & 
+ 	\cos\left(\theta\right)\,\sin\left(\phi \right) & 
+ 	\cos\left(\phi \right)\,\cos\left(\theta\right) 
+ 	\end{array}\right)
+\end{gather}
+
+For the case $\theta=\frac{\pi}{2}$: 
+\begin{gather}
+ 	\left(\begin{array}{ccc} 
+ 	0 &  \cos\left(\psi\right)\,\sin\left(\phi 
+ 	\right)-\cos\left(\phi 
+ 	\right)\,\sin\left(\psi\right) & \sin\left(\phi 
+ 	\right)\,\sin\left(\psi\right)+\cos\left(\phi 
+ 	\right)\,\cos\left(\psi\right)\\ 
+ 	0 &  \cos\left(\phi \right)\,\cos\left(\psi\right)+\sin\left(\phi 
+ 	\right)\,\sin\left(\psi\right) & \cos\left(\phi 
+\right)\,\sin\left(\psi\right)-\cos\left(\psi\right)\,\sin\left(\phi
+	 \right)\\
+	 -1 &  	0 & 0 
+ 	\end{array}\right) \\
+	 	= 
+	 	\left(\begin{array}{ccc} 
+	 	0 &  \sin(\phi-\psi) & \cos(\phi-\psi) \\ 
+	 	0 &  \cos(\phi-\psi) & -\sin(\phi-\psi) \\
+		-1 &  	0 & 0 
+ 	\end{array}\right)
+\end{gather}
+
+For the case $\theta=-\frac{\pi}{2}$: 
+\begin{gather}
+ 	\left(\begin{array}{ccc} 
+ 	0 &  -\cos\left(\psi\right)\,\sin\left(\phi 
+ 	\right)-\cos\left(\phi 
+ 	\right)\,\sin\left(\psi\right) & \sin\left(\phi 
+ 	\right)\,\sin\left(\psi\right)-\cos\left(\phi 
+ 	\right)\,\cos\left(\psi\right)\\ 
+ 	0 &  \cos\left(\phi \right)\,\cos\left(\psi\right)-\sin\left(\phi 
+ 	\right)\,\sin\left(\psi\right) & -\cos\left(\phi 
+\right)\,\sin\left(\psi\right)-\cos\left(\psi\right)\,\sin\left(\phi
+	 \right)\\
+	 1 &  	0 & 0 
+ 	\end{array}\right) \\
+	 	= 
+	 	\left(\begin{array}{ccc} 
+	 	0 &  -\sin(\phi+\psi) & -\cos(\phi+\psi) \\ 
+	 	0 &  \cos(\phi+\psi) & -\sin(\phi+\psi) \\
+		1 &  	0 & 0 
+ 	\end{array}\right)
+\end{gather}
+
+%\verbatiminput{G:/this_semester/086761/hw4/hw4.m}
+\end{document}
