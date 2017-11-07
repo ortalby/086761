@@ -1,0 +1,53 @@
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{cases}
+\usepackage{cite}
+\usepackage{mathtools}
+\usepackage{color, soul}
+%\usepackage{bbm}
+
+%%% PAGE DIMENSIONS
+\usepackage{geometry} % to change the page dimensions
+\geometry{a4paper} % or letterpaper (US) or a5paper or....
+%\geometry{margin=2in} % for example, change the margins to 2 inches all round
+\geometry{margin=2cm} % for example, change the margins to 2 inches all round
+% \geometry{landscape} % set up the page for landscape
+%   read geometry.pdf for detailed page layout information
+
+
+% Absolute value
+\newcommand{\abs}[1]{\left|#1\right|}
+
+% Norm
+\newcommand{\norm}[1]{\left|\left|#1\right|\right|}
+\newcommand{\nrm}[1]{\left|\left|#1\right|\right|}
+\newcommand{\inner}[2]{\langle#1,#2\rangle}
+\newcommand{\mean}[1]{\left\langle#1\right\rangle}
+
+% Proof end square
+\newcommand{\rbbqed}{\flushright $\blacksquare$ \flushleft}
+
+
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+%\newcommand{\floor}[1]{\left\lfloor#1\right\rfloor}
+
+
+%\renewcommand{\thesection}{\hspace*{-1.0em}}
+\renewcommand{\thesubsection}{\arabic{section}.\arabic{subsection}}
+
+\DeclareMathOperator*{\argmin}{{\arg \min}}
+\DeclareMathOperator*{\argmax}{{\arg \max}}
+\DeclareMathOperator*{\minimize}{minimize}
+\DeclareMathOperator*{\atan2}{atan2}
+\DeclareMathOperator*{\sign}{sign}
+
+\DeclareMathOperator*{\Tr}{trace}
+\DeclareMathOperator*{\tr}{tr}
+
+\newcommand{\expect}{\mathbb{E}}
+\newcommand{\prob}[1]{\mathbb{P}\left(#1\right)}
+\DeclareMathOperator{\cov}{cov}
+
+\date{\today}
+\author{Yuri Feldman, 309467801}

@@ -7,8 +7,10 @@
 \usepackage{floatrow}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
-\import{G:/this_semester/latex/}{046201.sty}
-\graphicspath{{G:/this_semester/086761/hw4/}}
+\import{./}{046201.sty}
+\import{./}{jupyter-defs.sty}
+%\import{G:/this_semester/latex/}{046201.sty}
+%\graphicspath{{G:/this_semester/086761/hw4/}}
 
 \usepackage{verbatim}
 
@@ -181,71 +183,210 @@ Eq.(\ref{eq:2b:quadratic-form}).
 
 \chapter{Code}
 
-%\begin{gather}
-%	\phi \psi
-%\end{gather}
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}2}]:} \PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+	\PY{k+kn}{from} \PY{n+nn}{numpy}\PY{n+nn}{.}\PY{n+nn}{linalg} \PY{k}{import} \PY{n}{norm}
+	\PY{k+kn}{from} \PY{n+nn}{math} \PY{k}{import} \PY{n}{sin}\PY{p}{,} \PY{n}{cos}\PY{p}{,} \PY{n}{pi}\PY{p}{,} \PY{n}{asin}\PY{p}{,} \PY{n}{atan2}\PY{p}{,} \PY{n}{degrees}
+	\PY{k+kn}{from} \PY{n+nn}{tabulate} \PY{k}{import} \PY{n}{tabulate}
+	
+	\PY{n}{np}\PY{o}{.}\PY{n}{set\PYZus{}printoptions}\PY{p}{(}\PY{n}{suppress}\PY{o}{=}\PY{k+kc}{True}\PY{p}{,}\PY{n}{precision}\PY{o}{=}\PY{l+m+mi}{11}\PY{p}{)}
+\end{Verbatim}
+
+
+\section{Rotations}\label{rotations}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}19}]:} \PY{k}{def} \PY{n+nf}{wedge}\PY{p}{(}\PY{n}{v}\PY{p}{)}\PY{p}{:}
+	   \PY{k}{return} \PY{n}{np}\PY{o}{.}\PY{n}{matrix}\PY{p}{(}\PY{p}{[}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{n}{v}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{,} \PY{n}{v}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{]}\PY{p}{,}
+	   \PY{p}{[}\PY{n}{v}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,}  \PY{o}{\PYZhy{}}\PY{n}{v}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{]}\PY{p}{,}
+	   \PY{p}{[}\PY{o}{\PYZhy{}}\PY{n}{v}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,} \PY{n}{v}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{]}\PY{p}{)}\PY{p}{;}
+	
+	\PY{k}{def} \PY{n+nf}{get\PYZus{}rotation\PYZus{}rodriguez}\PY{p}{(}\PY{n}{v}\PY{p}{,} \PY{n}{theta}\PY{o}{=}\PY{k+kc}{None}\PY{p}{)}\PY{p}{:}
+	   \PY{k}{if} \PY{n}{theta} \PY{o+ow}{is} \PY{k+kc}{None}\PY{p}{:}
+	   \PY{n}{theta} \PY{o}{=} \PY{n}{norm}\PY{p}{(}\PY{n}{v}\PY{p}{)}\PY{p}{;} 
+	   \PY{n}{n} \PY{o}{=} \PY{n}{v}\PY{o}{/}\PY{n}{theta}\PY{p}{;} 
+	   \PY{k}{else}\PY{p}{:} 
+	   \PY{n}{n} \PY{o}{=} \PY{n}{v}\PY{p}{;} 
+	
+	   \PY{n}{cM} \PY{o}{=} \PY{n}{wedge}\PY{p}{(}\PY{n}{n}\PY{p}{)}\PY{p}{;} 
+	   \PY{k}{return} \PY{n}{np}\PY{o}{.}\PY{n}{identity}\PY{p}{(}\PY{l+m+mi}{3}\PY{p}{)} \PY{o}{+} \PY{n}{sin}\PY{p}{(}\PY{n}{theta}\PY{p}{)}\PY{o}{*}\PY{n}{cM} \PY{o}{+} \PY{p}{(}\PY{l+m+mi}{1}\PY{o}{\PYZhy{}}\PY{n}{cos}\PY{p}{(}\PY{n}{theta}\PY{p}{)}\PY{p}{)}\PY{o}{*}\PY{n}{cM}\PY{o}{*}\PY{n}{cM}
+\end{Verbatim}
+
+
+\subsection{}\label{a}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}14}]:} \PY{k}{def} \PY{n+nf}{rotx}\PY{p}{(}\PY{n}{phi}\PY{p}{)}\PY{p}{:}
+	    \PY{n}{v} \PY{o}{=} \PY{n}{phi}\PY{o}{*}\PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}\PY{p}{;} 
+	    \PY{k}{return} \PY{n}{get\PYZus{}rotation\PYZus{}rodriguez}\PY{p}{(}\PY{n}{v}\PY{p}{)}
+	
+	\PY{k}{def} \PY{n+nf}{roty}\PY{p}{(}\PY{n}{theta}\PY{p}{)}\PY{p}{:}
+	    \PY{n}{v} \PY{o}{=} \PY{n}{theta}\PY{o}{*}\PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}\PY{p}{;} 
+	    \PY{k}{return} \PY{n}{get\PYZus{}rotation\PYZus{}rodriguez}\PY{p}{(}\PY{n}{v}\PY{p}{)}
+	
+	\PY{k}{def} \PY{n+nf}{rotz}\PY{p}{(}\PY{n}{psi}\PY{p}{)}\PY{p}{:}
+	    \PY{n}{v} \PY{o}{=} \PY{n}{psi}\PY{o}{*}\PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}\PY{p}{;} 
+	    \PY{k}{return} \PY{n}{get\PYZus{}rotation\PYZus{}rodriguez}\PY{p}{(}\PY{n}{v}\PY{p}{)} 
+	
+	\PY{k}{def} \PY{n+nf}{angles2rot}\PY{p}{(}\PY{n}{phi}\PY{p}{,} \PY{n}{theta}\PY{p}{,} \PY{n}{psi}\PY{p}{)}\PY{p}{:} 
+	    \PY{k}{return} \PY{n}{rotz}\PY{p}{(}\PY{n}{psi}\PY{p}{)}\PY{o}{*}\PY{n}{roty}\PY{p}{(}\PY{n}{theta}\PY{p}{)}\PY{o}{*}\PY{n}{rotx}\PY{p}{(}\PY{n}{phi}\PY{p}{)}
+\end{Verbatim}
+
+
+\subsection{}\label{b}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}16}]:} \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{R= }\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{\PYZsq{}} \PY{o}{+} \PY{n+nb}{str}\PY{p}{(}\PY{n}{angles2rot}\PY{p}{(}\PY{n}{phi}\PY{o}{=}\PY{n}{pi}\PY{o}{/}\PY{l+m+mi}{4}\PY{p}{,} \PY{n}{theta}\PY{o}{=}\PY{n}{pi}\PY{o}{/}\PY{l+m+mi}{5}\PY{p}{,} \PY{n}{psi}\PY{o}{=}\PY{n}{pi}\PY{o}{/}\PY{l+m+mi}{7}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+R= 
+[[ 0.72889912554  0.06766479742  0.68126906578]
+[ 0.35101931853  0.81741496597 -0.45674742629]
+[-0.58778525229  0.57206140282  0.57206140282]]
+
+\end{Verbatim}
+
+\subsection{}\label{c}
 \begin{gather}
- 	\left(\begin{array}{ccc} 
- 	\cos\left(\psi\right)\,\cos\left(\theta\right) & 
- 	\cos\left(\psi\right)\,\sin\left(\phi 
- 	\right)\,\sin\left(\theta\right)-\cos\left(\phi 
- 	\right)\,\sin\left(\psi\right) & \sin\left(\phi 
- 	\right)\,\sin\left(\psi\right)+\cos\left(\phi 
- 	\right)\,\cos\left(\psi\right)\,\sin\left(\theta\right)\\ 
- 	\cos\left(\theta\right)\,\sin\left(\psi\right) & 
- 	\cos\left(\phi \right)\,\cos\left(\psi\right)+\sin\left(\phi 
- 	\right)\,\sin\left(\psi\right)\,\sin\left(\theta\right) & 
- 	\cos\left(\phi 
+\left(\begin{array}{ccc} 
+\cos\left(\psi\right)\,\cos\left(\theta\right) & 
+\cos\left(\psi\right)\,\sin\left(\phi 
+\right)\,\sin\left(\theta\right)-\cos\left(\phi 
+\right)\,\sin\left(\psi\right) & \sin\left(\phi 
+\right)\,\sin\left(\psi\right)+\cos\left(\phi 
+\right)\,\cos\left(\psi\right)\,\sin\left(\theta\right)\\ 
+\cos\left(\theta\right)\,\sin\left(\psi\right) & 
+\cos\left(\phi \right)\,\cos\left(\psi\right)+\sin\left(\phi 
+\right)\,\sin\left(\psi\right)\,\sin\left(\theta\right) & 
+\cos\left(\phi 
 \right)\,\sin\left(\psi\right)\,\sin\left(\theta\right)-\cos\left(\psi\right)\,\sin\left(\phi
- 	 \right)\\ -\sin\left(\theta\right) & 
- 	\cos\left(\theta\right)\,\sin\left(\phi \right) & 
- 	\cos\left(\phi \right)\,\cos\left(\theta\right) 
- 	\end{array}\right)
+\right)\\ -\sin\left(\theta\right) & 
+\cos\left(\theta\right)\,\sin\left(\phi \right) & 
+\cos\left(\phi \right)\,\cos\left(\theta\right) 
+\end{array}\right)
 \end{gather}
 
 For the case $\theta=\frac{\pi}{2}$: 
 \begin{gather}
- 	\left(\begin{array}{ccc} 
- 	0 &  \cos\left(\psi\right)\,\sin\left(\phi 
- 	\right)-\cos\left(\phi 
- 	\right)\,\sin\left(\psi\right) & \sin\left(\phi 
- 	\right)\,\sin\left(\psi\right)+\cos\left(\phi 
- 	\right)\,\cos\left(\psi\right)\\ 
- 	0 &  \cos\left(\phi \right)\,\cos\left(\psi\right)+\sin\left(\phi 
- 	\right)\,\sin\left(\psi\right) & \cos\left(\phi 
+\left(\begin{array}{ccc} 
+0 &  \cos\left(\psi\right)\,\sin\left(\phi 
+\right)-\cos\left(\phi 
+\right)\,\sin\left(\psi\right) & \sin\left(\phi 
+\right)\,\sin\left(\psi\right)+\cos\left(\phi 
+\right)\,\cos\left(\psi\right)\\ 
+0 &  \cos\left(\phi \right)\,\cos\left(\psi\right)+\sin\left(\phi 
+\right)\,\sin\left(\psi\right) & \cos\left(\phi 
 \right)\,\sin\left(\psi\right)-\cos\left(\psi\right)\,\sin\left(\phi
-	 \right)\\
-	 -1 &  	0 & 0 
- 	\end{array}\right) \\
-	 	= 
-	 	\left(\begin{array}{ccc} 
-	 	0 &  \sin(\phi-\psi) & \cos(\phi-\psi) \\ 
-	 	0 &  \cos(\phi-\psi) & -\sin(\phi-\psi) \\
-		-1 &  	0 & 0 
- 	\end{array}\right)
+\right)\\
+-1 &  	0 & 0 
+\end{array}\right) \\
+= 
+\left(\begin{array}{ccc} 
+0 &  \sin(\phi-\psi) & \cos(\phi-\psi) \\ 
+0 &  \cos(\phi-\psi) & -\sin(\phi-\psi) \\
+-1 &  	0 & 0 
+\end{array}\right)
 \end{gather}
 
 For the case $\theta=-\frac{\pi}{2}$: 
 \begin{gather}
- 	\left(\begin{array}{ccc} 
- 	0 &  -\cos\left(\psi\right)\,\sin\left(\phi 
- 	\right)-\cos\left(\phi 
- 	\right)\,\sin\left(\psi\right) & \sin\left(\phi 
- 	\right)\,\sin\left(\psi\right)-\cos\left(\phi 
- 	\right)\,\cos\left(\psi\right)\\ 
- 	0 &  \cos\left(\phi \right)\,\cos\left(\psi\right)-\sin\left(\phi 
- 	\right)\,\sin\left(\psi\right) & -\cos\left(\phi 
+\left(\begin{array}{ccc} 
+0 &  -\cos\left(\psi\right)\,\sin\left(\phi 
+\right)-\cos\left(\phi 
+\right)\,\sin\left(\psi\right) & \sin\left(\phi 
+\right)\,\sin\left(\psi\right)-\cos\left(\phi 
+\right)\,\cos\left(\psi\right)\\ 
+0 &  \cos\left(\phi \right)\,\cos\left(\psi\right)-\sin\left(\phi 
+\right)\,\sin\left(\psi\right) & -\cos\left(\phi 
 \right)\,\sin\left(\psi\right)-\cos\left(\psi\right)\,\sin\left(\phi
-	 \right)\\
-	 1 &  	0 & 0 
- 	\end{array}\right) \\
-	 	= 
-	 	\left(\begin{array}{ccc} 
-	 	0 &  -\sin(\phi+\psi) & -\cos(\phi+\psi) \\ 
-	 	0 &  \cos(\phi+\psi) & -\sin(\phi+\psi) \\
-		1 &  	0 & 0 
- 	\end{array}\right)
+\right)\\
+1 &  	0 & 0 
+\end{array}\right) \\
+= 
+\left(\begin{array}{ccc} 
+0 &  -\sin(\phi+\psi) & -\cos(\phi+\psi) \\ 
+0 &  \cos(\phi+\psi) & -\sin(\phi+\psi) \\
+1 &  	0 & 0 
+\end{array}\right)
 \end{gather}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}17}]:} \PY{k}{def} \PY{n+nf}{rot2angles}\PY{p}{(}\PY{n}{M}\PY{p}{)}\PY{p}{:}
+	   \PY{n}{sin\PYZus{}theta} \PY{o}{=} \PY{o}{\PYZhy{}}\PY{n}{M}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{;}     
+	   \PY{n}{theta} \PY{o}{=} \PY{n}{asin}\PY{p}{(}\PY{n}{sin\PYZus{}theta}\PY{p}{)}\PY{p}{;}     
+
+	   \PY{k}{if} \PY{n}{sin\PYZus{}theta}\PY{o}{==}\PY{l+m+mi}{1}\PY{p}{:}
+	      \PY{n}{psi} \PY{o}{=} \PY{l+m+mi}{0}\PY{p}{;} \PY{c+c1}{\PYZsh{} arbitrary}
+	      \PY{n}{phi} \PY{o}{=} \PY{n}{atan2}\PY{p}{(}\PY{n}{M}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{n}{M}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{)}\PY{p}{;}     
+	   \PY{k}{elif}    \PY{n}{sin\PYZus{}theta}\PY{o}{==}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{:}
+	      \PY{n}{psi} \PY{o}{=} \PY{l+m+mi}{0}\PY{p}{;} \PY{c+c1}{\PYZsh{} arbitrary}
+	      \PY{n}{phi} \PY{o}{=} \PY{n}{atan2}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{n}{M}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{o}{\PYZhy{}}\PY{n}{M}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{)}\PY{p}{;}        
+	   \PY{k}{else}\PY{p}{:}
+	      \PY{c+c1}{\PYZsh{} another valid solution: pi\PYZhy{}theta.             }
+	      \PY{n}{cos\PYZus{}theta} \PY{o}{=} \PY{n}{cos}\PY{p}{(}\PY{n}{theta}\PY{p}{)}\PY{p}{;} 
+	      \PY{n}{phi} \PY{o}{=} \PY{n}{atan2}\PY{p}{(}\PY{n}{M}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{/}\PY{n}{cos\PYZus{}theta}\PY{p}{,} \PY{n}{M}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{]}\PY{o}{/}\PY{n}{cos\PYZus{}theta}\PY{p}{)}\PY{p}{;}
+	      \PY{n}{psi} \PY{o}{=} \PY{n}{atan2}\PY{p}{(}\PY{n}{M}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{/}\PY{n}{cos\PYZus{}theta}\PY{p}{,} \PY{n}{M}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{o}{/}\PY{n}{cos\PYZus{}theta}\PY{p}{)}\PY{p}{;}
+
+	   \PY{k}{return} \PY{n}{phi}\PY{p}{,} \PY{n}{theta}\PY{p}{,} \PY{n}{psi}
+\end{Verbatim}
+
+
+\subsection{}\label{d}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}22}]:} \PY{n}{phi}\PY{p}{,} \PY{n}{theta}\PY{p}{,} \PY{n}{psi} \PY{o}{=} \PY{p}{(}\PY{n}{degrees}\PY{p}{(}\PY{n}{x}\PY{p}{)} \PY{k}{for} \PY{n}{x} \PY{o+ow}{in} \PY{n}{rot2angles}\PY{p}{(}
+\PY{n}{np}\PY{o}{.}\PY{n}{mat}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ 0.813797681 \PYZhy{}0.440969611 0.378522306;  }\PY{l+s+se}{\PYZbs{}}
+\PY{l+s+s1}{                           0.46984631   0.882564119 0.0180283112; }\PY{l+s+se}{\PYZbs{}}
+\PY{l+s+s1}{                          \PYZhy{}0.342020143  0.163175911 0.925416578}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{phi=}\PY{l+s+s1}{\PYZsq{}} \PY{o}{+} \PY{n+nb}{str}\PY{p}{(}\PY{n}{phi}\PY{p}{)}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{theta=}\PY{l+s+s1}{\PYZsq{}} \PY{o}{+} \PY{n+nb}{str}\PY{p}{(}\PY{n}{theta}\PY{p}{)}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{psi=}\PY{l+s+s1}{\PYZsq{}} \PY{o}{+} \PY{n+nb}{str}\PY{p}{(}\PY{n}{psi}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+phi=9.999999994217536 theta=19.999999980143038 psi=29.99999998990158
+
+\end{Verbatim}
+
+\section{3D Rigid Transformation}\label{d-rigid-transformation}
+
+\begin{Verbatim}[commandchars=\\\{\},samepage=true]
+{\color{incolor}In [{\color{incolor}23}]:} \PY{n}{trans} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{mat}\PY{p}{(}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mf}{451.2459}\PY{p}{,} \PY{l+m+mf}{257.0322}\PY{p}{,} \PY{l+m+mi}{400}\PY{p}{]}\PY{p}{)}
+\PY{n}{rot} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{mat}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{0.5363 \PYZhy{}0.8440 0; 0.8440 0.5363 0; 0 0 1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{;} 
+
+\PY{n}{pt} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{mat}\PY{p}{(}\PY{p}{[}\PY{l+m+mi}{450}\PY{p}{,} \PY{l+m+mi}{400}\PY{p}{,} \PY{l+m+mi}{50}\PY{p}{]}\PY{p}{)}
+
+\PY{n}{Tgl} \PY{o}{=} \PY{n}{rot}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{p}{(}\PY{n}{pt} \PY{o}{+} \PY{n}{trans}\PY{p}{)}\PY{o}{.}\PY{n}{T}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{Tgl}\PY{p}{)}
+
+[[-555.20335297]
+[ 351.31482926]
+[ 450.        ]]
+
+\end{Verbatim}
+
+
+\section{Pose Composition}\label{pose-composition}
+Commanded:
+\begin{gather}
+x^c_{k+1} = x_k + \begin{pmatrix} 0 \\ 1 \end{pmatrix} \\
+R^c_{k+1} = R^c_k
+\end{gather}
+Actual:
+\begin{gather}
+	x^a_{k+1} = x_k + \begin{pmatrix} 0 \\ 1.1 \end{pmatrix} \\
+	R^a_{k+1} = R(\theta = 1^{\circ}) \cdot R^c_k
+\end{gather}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}24}]:} \PY{k}{for} \PY{n}{ii} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{)}\PY{p}{:} 
+
+\end{Verbatim}
+
+%\begin{gather}
+%	\phi \psi
+%\end{gather}
 
 %\verbatiminput{G:/this_semester/086761/hw4/hw4.m}
 \end{document}
