@@ -249,6 +249,9 @@ R=
 \end{Verbatim}
 
 \subsection{}\label{c}
+Development here is based on \cite{slabaugh1999computing}. 
+
+We first write the rotation matrix as the product of individual axis rotation matrices:
 \begin{gather}
 \left(\begin{array}{ccc} 
 \cos\left(\psi\right)\,\cos\left(\theta\right) & 
@@ -267,8 +270,8 @@ R=
 \cos\left(\phi \right)\,\cos\left(\theta\right) 
 \end{array}\right)
 \end{gather}
-
-For the case $\theta=\frac{\pi}{2}$: 
+Given rotation matrix $R$, we will want to extract angles by demanding per-element equality. We treat separately the case where $\cos(\theta) = 0$.
+For the case $\theta=\frac{\pi}{2}$ we obtain the matrix: 
 \begin{gather}
 \left(\begin{array}{ccc} 
 0 &  \cos\left(\psi\right)\,\sin\left(\phi 
@@ -311,8 +314,8 @@ For the case $\theta=-\frac{\pi}{2}$:
 1 &  	0 & 0 
 \end{array}\right)
 \end{gather}
-
-\begin{Verbatim}[commandchars=\\\{\}]
+From here we proceed extracting the angles (see code and \cite{slabaugh1999computing}). 
+\begin{Verbatim}[commandchars=\\\{\},samepage=true]
 {\color{incolor}In [{\color{incolor}17}]:} \PY{k}{def} \PY{n+nf}{rot2angles}\PY{p}{(}\PY{n}{M}\PY{p}{)}\PY{p}{:}
 	   \PY{n}{sin\PYZus{}theta} \PY{o}{=} \PY{o}{\PYZhy{}}\PY{n}{M}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{;}     
 	   \PY{n}{theta} \PY{o}{=} \PY{n}{asin}\PY{p}{(}\PY{n}{sin\PYZus{}theta}\PY{p}{)}\PY{p}{;}     
@@ -350,6 +353,10 @@ phi=9.999999994217536 theta=19.999999980143038 psi=29.99999998990158
 \end{Verbatim}
 
 \section{3D Rigid Transformation}\label{d-rigid-transformation}
+\begin{gather}
+	l^C = R_G^C l^G + t^C_{C\to G} = R_G^C (l^G + t^G_{C\to G})
+\end{gather}
+
 
 \begin{Verbatim}[commandchars=\\\{\},samepage=true]
 {\color{incolor}In [{\color{incolor}23}]:} \PY{n}{trans} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{mat}\PY{p}{(}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mf}{451.2459}\PY{p}{,} \PY{l+m+mf}{257.0322}\PY{p}{,} \PY{l+m+mi}{400}\PY{p}{]}\PY{p}{)}
@@ -370,13 +377,23 @@ phi=9.999999994217536 theta=19.999999980143038 psi=29.99999998990158
 \section{Pose Composition}\label{pose-composition}
 Commanded:
 \begin{gather}
-x^c_{k+1} = x_k + \begin{pmatrix} 0 \\ 1 \end{pmatrix} \\
-R^c_{k+1} = R^c_k
+x^c_{k+1} = x_k + \begin{pmatrix} 1 \\ 0 \end{pmatrix} \\
+R^c_{k+1} = R^c_k \\
+\prescript{k+1}{k}T^{(commanded)} = \begin{pmatrix}
+I & \begin{pmatrix}
+1 \\ 0
+\end{pmatrix} 
+\end{pmatrix}
 \end{gather}
 Actual:
 \begin{gather}
-	x^a_{k+1} = x_k + \begin{pmatrix} 0 \\ 1.1 \end{pmatrix} \\
-	R^a_{k+1} = R(\theta = 1^{\circ}) \cdot R^c_k
+	x^a_{k+1} = x_k + \begin{pmatrix} 1.01 \\ 0 \end{pmatrix} \\
+	R^a_{k+1} = R(\theta = 1^{\circ}) \cdot R^c_k \\
+	\prescript{k+1}{k}T^{(actual)} = \begin{pmatrix}
+	R(\theta^{\circ}) & \begin{pmatrix}
+	1.01 \\ 0
+	\end{pmatrix} 
+	\end{pmatrix}
 \end{gather}
 
 \begin{Verbatim}[commandchars=\\\{\}]
@@ -389,4 +406,7 @@ Actual:
 %\end{gather}
 
 %\verbatiminput{G:/this_semester/086761/hw4/hw4.m}
+\bibliographystyle{plain}
+\bibliography{086761.bib}
+
 \end{document}
