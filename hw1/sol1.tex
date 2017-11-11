@@ -37,7 +37,8 @@
 \title{086761 - Homework 1}
 %\subtitle{Efficient Marginal Likelihood Optimization in Blind Deconvolution - 
 %A.Levin, Y.Weiss, F.Durand, W.T.Freeman}
-\author{Yuri Feldman, 309467801}
+\author{Yuri Feldman, 309467801 yurif@cs.technion.ac.il \\
+	    Alexander Shender, 328626114 aka.sova@gmail.com }
 \begin{document}
 \maketitle
 %\tableofcontents
@@ -58,7 +59,11 @@ depend on $y$ being Gaussian):
 	A\expect\left[ 
 	(x-\mu_x)(x-\mu_x)^T\right] A^T = \boxed{A\Sigma_x A^T}
 \end{gather}
-Next, we show that $y$ is Gaussian. In the case where $A$ is invertible this 
+Next, we show that $y$ is Gaussian. 
+
+Note: In retrospective, an easier approach than the below is to consider that any projection of $Ax$ is ultimately a projection of $x$ and so is, by definition, Guassian (and hence so is $Ax+b$). Another alternative approach is to show that the characteristic function of $Ax+b$ has the same form as a Gaussian density. The direct approach below gets complicated (but still valid) when density of $Ax+b$ is degenerate. 
+
+We proceed to show that $y$ is Gaussian. In the case where $A$ is invertible this 
 can be directly obtained from random vector transformation formula (1-to-1 
 transformation). Since $y=Ax+b$ the Jacobian matrix is $A$ and since the 
 mapping is one-to-one (A is invertible) according to the transformation 
@@ -396,11 +401,86 @@ Actual:
 	\end{pmatrix}
 \end{gather}
 
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}24}]:} \PY{k}{for} \PY{n}{ii} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{)}\PY{p}{:} 
 
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}121}]:} \PY{o}{\PYZpc{}}\PY{k}{matplotlib} inline
+
+\PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
+\PY{k+kn}{from} \PY{n+nn}{copy} \PY{k}{import} \PY{n}{deepcopy} 
+
+\PY{k}{def} \PY{n+nf}{rotation2}\PY{p}{(}\PY{n}{theta}\PY{p}{)}\PY{p}{:} 
+\PY{k}{return} \PY{n}{np}\PY{o}{.}\PY{n}{mat}\PY{p}{(}\PY{p}{[}\PY{p}{[}\PY{n}{cos}\PY{p}{(}\PY{n}{theta}\PY{p}{)}\PY{p}{,}\PY{n}{sin}\PY{p}{(}\PY{n}{theta}\PY{p}{)}\PY{p}{]}\PY{p}{,}
+\PY{p}{[}\PY{o}{\PYZhy{}}\PY{n}{sin}\PY{p}{(}\PY{n}{theta}\PY{p}{)}\PY{p}{,}\PY{n}{cos}\PY{p}{(}\PY{n}{theta}\PY{p}{)}\PY{p}{]}\PY{p}{]}\PY{p}{)}\PY{p}{;} 
+
+\PY{k}{def} \PY{n+nf}{rot2angle}\PY{p}{(}\PY{n}{R}\PY{p}{)}\PY{p}{:}
+\PY{k}{return} \PY{n}{atan2}\PY{p}{(}\PY{n}{R}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,} \PY{n}{R}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}\PY{p}{;} 
+
+\PY{n}{Tc} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{concatenate}\PY{p}{(}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{identity}\PY{p}{(}\PY{l+m+mi}{2}\PY{p}{)}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{mat}\PY{p}{(}\PY{p}{[}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{]}\PY{p}{)}\PY{p}{)}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{;} 
+
+\PY{n}{dtheta} \PY{o}{=} \PY{n}{pi}\PY{o}{/}\PY{l+m+mi}{180}\PY{p}{;}
+\PY{n}{Ta} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{concatenate}\PY{p}{(}\PY{p}{(}\PY{n}{rotation2}\PY{p}{(}\PY{n}{dtheta}\PY{p}{)}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{mat}\PY{p}{(}\PY{p}{[}\PY{p}{[}\PY{l+m+mf}{1.01}\PY{p}{]}\PY{p}{,}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{]}\PY{p}{)}\PY{p}{)}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{;} 
+
+\PY{c+c1}{\PYZsh{} Initial pose}
+\PY{n}{origin} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{mat}\PY{p}{(}\PY{p}{[}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{]}\PY{p}{)}\PY{o}{.}\PY{n}{T}\PY{p}{;}
+\PY{n}{orientation} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{mat}\PY{p}{(}\PY{p}{[}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{]}\PY{p}{)}\PY{o}{.}\PY{n}{T}\PY{p}{;} 
+\PY{n}{Ti} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{concatenate}\PY{p}{(}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{identity}\PY{p}{(}\PY{l+m+mi}{2}\PY{p}{)}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{mat}\PY{p}{(}\PY{p}{[}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{]}\PY{p}{)}\PY{p}{)}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{;} 
+
+\PY{c+c1}{\PYZsh{} Lists hold nominal and actual pose history}
+\PY{n}{T1} \PY{o}{=} \PY{p}{[}\PY{p}{\PYZob{}}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{T}\PY{l+s+s2}{\PYZdq{}} \PY{p}{:} \PY{n}{Ti}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{origin}\PY{l+s+s2}{\PYZdq{}} \PY{p}{:} \PY{n}{origin}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{orientation}\PY{l+s+s2}{\PYZdq{}} \PY{p}{:} \PY{n}{orientation}\PY{p}{\PYZcb{}}\PY{p}{]}\PY{p}{;} 
+\PY{n}{T2} \PY{o}{=} \PY{n}{deepcopy}\PY{p}{(}\PY{n}{T1}\PY{p}{)}\PY{p}{;} 
+\PY{k}{for} \PY{n}{ii} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{)}\PY{p}{:}
+\PY{c+c1}{\PYZsh{} commanded}
+\PY{n}{Tk} \PY{o}{=} \PY{n}{Tc}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{vstack}\PY{p}{(}\PY{p}{(}\PY{n}{T1}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{T}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}\PY{p}{)}\PY{p}{)}\PY{p}{;} 
+\PY{n}{nominal\PYZus{}origin} \PY{o}{=} \PY{n}{Tk}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{;} 
+\PY{n}{Rk} \PY{o}{=} \PY{n}{Tk}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{:}\PY{l+m+mi}{2}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{:}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{;} 
+\PY{n}{nominal\PYZus{}orientation} \PY{o}{=} \PY{n}{Rk}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n}{orientation}\PY{p}{)}\PY{p}{;}    
+\PY{n}{T1}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{p}{\PYZob{}}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{T}\PY{l+s+s2}{\PYZdq{}} \PY{p}{:} \PY{n}{Tk}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{origin}\PY{l+s+s2}{\PYZdq{}} \PY{p}{:} \PY{n}{nominal\PYZus{}origin}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{orientation}\PY{l+s+s2}{\PYZdq{}} \PY{p}{:} \PY{n}{nominal\PYZus{}orientation}\PY{p}{\PYZcb{}}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} actual}
+\PY{n}{Tk} \PY{o}{=} \PY{n}{Ta}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{vstack}\PY{p}{(}\PY{p}{(}\PY{n}{T2}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{T}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}\PY{p}{)}\PY{p}{)}\PY{p}{;} 
+\PY{n}{actual\PYZus{}origin} \PY{o}{=} \PY{n}{Tk}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{;} 
+\PY{n}{Rk} \PY{o}{=} \PY{n}{Tk}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{:}\PY{l+m+mi}{2}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{:}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{;} 
+\PY{n}{actual\PYZus{}orientation} \PY{o}{=} \PY{n}{Rk}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n}{orientation}\PY{p}{)}\PY{p}{;}  
+\PY{n}{T2}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{p}{\PYZob{}}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{T}\PY{l+s+s2}{\PYZdq{}} \PY{p}{:} \PY{n}{Tk}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{origin}\PY{l+s+s2}{\PYZdq{}} \PY{p}{:} \PY{n}{actual\PYZus{}origin}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{orientation}\PY{l+s+s2}{\PYZdq{}} \PY{p}{:} \PY{n}{actual\PYZus{}orientation}\PY{p}{\PYZcb{}}\PY{p}{)}
+
+\PY{k}{def} \PY{n+nf}{disp\PYZus{}track}\PY{p}{(}\PY{n}{locations}\PY{p}{,} \PY{n}{orientations}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{b}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{:}
+\PY{n}{x} \PY{o}{=} \PY{p}{[}\PY{n}{o}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{.}\PY{n}{item}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{)} \PY{k}{for} \PY{n}{o} \PY{o+ow}{in} \PY{n}{locations}\PY{p}{]}
+\PY{n}{y} \PY{o}{=} \PY{p}{[}\PY{n}{o}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{.}\PY{n}{item}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{)} \PY{k}{for} \PY{n}{o} \PY{o+ow}{in} \PY{n}{locations}\PY{p}{]}
+\PY{n}{u} \PY{o}{=} \PY{p}{[}\PY{n}{o}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{.}\PY{n}{item}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{)} \PY{k}{for} \PY{n}{o} \PY{o+ow}{in} \PY{n}{orientations}\PY{p}{]}
+\PY{n}{v} \PY{o}{=} \PY{p}{[}\PY{n}{o}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{.}\PY{n}{item}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{)} \PY{k}{for} \PY{n}{o} \PY{o+ow}{in} \PY{n}{orientations}\PY{p}{]}
+\PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZhy{}.}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{n}{color}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{quiver}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{,} \PY{n}{u}\PY{p}{,} \PY{n}{v}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{k}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{zorder}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{)}
+
+\PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{p}{)}
+
+\PY{n}{Pc} \PY{o}{=} \PY{p}{[}\PY{n}{P}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{origin}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{k}{for} \PY{n}{P} \PY{o+ow}{in} \PY{n}{T1}\PY{p}{]}
+\PY{n}{Uc} \PY{o}{=} \PY{p}{[}\PY{n}{P}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{orientation}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{k}{for} \PY{n}{P} \PY{o+ow}{in} \PY{n}{T1}\PY{p}{]}
+\PY{n}{disp\PYZus{}track}\PY{p}{(}\PY{n}{Pc}\PY{p}{,} \PY{n}{Uc}\PY{p}{)}
+
+\PY{n}{Pa} \PY{o}{=} \PY{p}{[}\PY{n}{P}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{origin}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{k}{for} \PY{n}{P} \PY{o+ow}{in} \PY{n}{T2}\PY{p}{]}
+\PY{n}{Ua} \PY{o}{=} \PY{p}{[}\PY{n}{P}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{orientation}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{k}{for} \PY{n}{P} \PY{o+ow}{in} \PY{n}{T2}\PY{p}{]}
+\PY{n}{disp\PYZus{}track}\PY{p}{(}\PY{n}{Pa}\PY{p}{,} \PY{n}{Ua}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{r}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+\PY{n}{plt}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{k+kc}{True}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{axis}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{equal}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{;} 
+\PY{n}{plt}\PY{o}{.}\PY{n}{legend}\PY{p}{(}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{commanded/nominal}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{actual}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}\PY{p}{;} 
+\PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Nominal vs. actual robot poses}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{;} 
+
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Location difference: }\PY{l+s+s1}{\PYZsq{}} \PY{o}{+} \PY{n+nb}{str}\PY{p}{(}\PY{n}{norm}\PY{p}{(}\PY{n}{Pc}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{\PYZhy{}}\PY{n}{Pa}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}\PY{p}{)} \PY{o}{+} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ m}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Orientation difference: }\PY{l+s+s1}{\PYZsq{}} \PY{o}{+} \PY{n+nb}{str}\PY{p}{(}\PY{n}{degrees}\PY{p}{(}\PY{n}{acos}\PY{p}{(}\PY{n}{Ua}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{.}\PY{n}{T}\PY{o}{.}\PY{n}{dot}\PY{p}{(}\PY{n}{Uc}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}\PY{p}{)}\PY{p}{)}\PY{p}{)} \PY{o}{+} \PY{l+s+sa}{u}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}N\PYZob{}DEGREE SIGN\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
 \end{Verbatim}
 
+
+
+\begin{Verbatim}[commandchars=\\\{\},frame=single]
+Location difference: 0.793435624902 m
+Orientation difference: 9.999999999999902°
+\end{Verbatim}
+
+\begin{center}
+	\adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_15_1.png}
+\end{center}
+{ \hspace*{\fill} \\}
 %\begin{gather}
 %	\phi \psi
 %\end{gather}
