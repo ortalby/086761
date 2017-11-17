@@ -1,0 +1,228 @@
+\documentclass[a4paper]{scrreprt}
+
+\input{packages.tex}
+\input{commands.tex}
+
+\title{086761 - Homework 2}
+\author{Yuri Feldman, 309467801 yurif@cs.technion.ac.il \\
+	    Alexander Shender, 328626114 aka.sova@gmail.com }
+\begin{document}
+\maketitle
+\chapter{}
+\section{}
+Substitute $\Lambda^{-1} = \Sigma$, $\eta = \Sigma^{-1}\mu$:
+\begin{gather}
+	p(x) = 
+	\frac{\exp\left(-\frac{1}{2}\mu^T\Sigma^{-T}\Sigma\Sigma^{-1}\mu\right)}{\sqrt{\det{2\pi\Sigma}}}
+	\exp \left(-\frac{1}{2}x^T\Sigma^{-1}x+\mu^T\Sigma^{-1}\right) = \\
+	\intertext{$\Sigma^{-1}=\Sigma^{-T}$ since it is symmetric}
+	= 
+	\frac{\exp\left(-\frac{1}{2}\left(x^T\Sigma^{-1}x - 2\mu^T\Sigma^{-1}  + 
+	\mu^T\Sigma^{-1}\mu\right)\right)}{\sqrt{\det{2\pi\Sigma}}} 
+	= \\
+	= \frac{1}{\sqrt{\det{2\pi\Sigma}}}
+	\exp\left\lbrace-\frac{1}{2}\left(x-\mu\right)^T\Sigma^{-1}\left(x-\mu\right)\right\rbrace
+\end{gather}
+the latter is the original multivariate Gaussian. 
+
+
+\chapter{}
+\section{}
+\begin{gather}
+	p(x) = N(\hat{x_0}, \Sigma_0) = 
+	\frac{1}{\sqrt{\det\left(2\pi\Sigma_0\right)}} 
+	e^{-\frac{1}{2}\parallel x-x_0 \parallel^2_{\Sigma_0}} \\
+	p(z\mid x) = N(h(x), \Sigma_v) = 
+	\frac{1}{\sqrt{\det\left(2\pi\Sigma_v\right)}} 
+		e^{-\frac{1}{2}\parallel z-h(x) \parallel^2_{\Sigma_v}}
+\end{gather}
+
+\section{}
+\begin{gather}
+	p(x\mid z_1) = \frac{p(z_1\mid x ) p(x)}{\int_x p(z_1\mid x) p(x)dx}
+\end{gather}
+
+\section{}
+We focus on the exponent (omitting the $-\frac{1}{2}$ factor) in the above 
+product, since all the rest is 
+normalization factor (does not depend on $x$). 
+\begin{gather}
+	\parallel h(x)-z_1 \parallel^2_{_{\Sigma_v}} + \parallel x-\hat{x_0 }
+	\parallel_{_{\Sigma_0}}^2 \approx 
+	\intertext{linearization around $\hat{x_0}$, H the Jacobian of h at 
+	$\hat{x}_0$:}
+	\approx \nrmsq{\Sigma_v}{h(\hat{x_0})+ H(x-\hat{x_0})-z_1}
+	+\nrmsq{\Sigma_0}{x-\hat{x}_0} = \\
+	= x^T\left(H^T\Sigma_v^{-1}H+\Sigma_0^{-1} \right)x
+	+2\left((h(\hat{x}_0)-H\hat{x}_0-z_1)^T\Sigma_v^{-1}H-\hat{x}_0^T\Sigma_0^{-1}\right)x
+	 +\dots 
+	\intertext{equating terms with the exponent of a MVN, we get:}
+	\Sigma_1 = \left(H^T\Sigma_v^{-1}H+\Sigma_0^{-1}\right)^{-1}
+	\\
+	\hat{x}_1 = \Sigma_1
+	\left(\Sigma_0^{-1}\hat{x}_0- 
+	H^T\Sigma_v^{-1}(h(\hat{x}_0)-H\hat{x}_0-z_1)\right)
+%	\nrmsq{}{\Sigma_v^{-\frac{1}{2}}\left(h(\hat{x_0})+ 
+%	H(x-\hat{x_0})-z_1\right)}
+%	+\nrmsq{}{\Sigma_0^{-\frac{1}{2}}\left(x-\hat{x}_0\right)} 
+\end{gather}
+Can iteratively use obtained $\hat{x}_1$ as the new linearization point 
+(re-calculate jacobian $H$) to improve estimate until convergence (Gauss 
+Newton). 
+
+\section{}
+\begin{gather}
+	p(x\mid z_1, z_2) \propto p(z_1, z_2\mid x) p(x) = 
+	\intertext{assume noise $v_1$, $v_2$ independent}
+	= p(z_1\mid x) p(z_2\mid x) p(x)
+\end{gather}
+We again get a Gaussian, can obtain mean and variance by minimizing the 
+exponent (again omitting the $-\frac{1}{2}$ factor)
+\begin{gather}
+	\nrmsq{\Sigma_v}{h(x)-z_2} + 
+	\nrmsq{\Sigma_v}{h(x)-z_1}  + \nrmsq{\Sigma_0}{x-\hat{x_0 }}
+\end{gather}
+Again need to pick a linearization point (e.g. $\hat{x}_1$ is a sensible one), 
+denote $\bar{x}$ as in the lecture, 
+then
+\begin{gather}
+	\approx 
+		\nrmsq{\Sigma_v}{Hx+ h(\bar{x})-H\bar{x}-z_2} + 
+		\nrmsq{\Sigma_v}{Hx +h(\bar{x}) -H\bar{x}-z_1}  + 
+		\nrmsq{\Sigma_0}{x-\hat{x_0 }}\\
+	\intertext{Following the same derivation as before, it's easy to see that}
+	\Sigma_2 = \left(2H^T\Sigma_v^{-1}H+\Sigma_0^{-1}\right)^{-1}
+		\\
+		\hat{x}_2 = \Sigma_2
+		\left(\Sigma_0^{-1}\hat{x}_0- 
+		2H^T\Sigma_v^{-1}(h(\hat{x}_0)-H\hat{x}_0-\frac{z_1+z_2}{2})\right)
+\end{gather}
+And again as in the previous clause, we can re-linearize to get better esimates 
+with Gauss-Newton iterations. 
+
+\chapter{}
+\section{}
+\begin{gather}
+	p(x_k\mid x_{k-1}, u_{k-1}) = N(f(x_{k-1}, u_{k-1}), \Sigma_w)
+	= \frac{1}{\sqrt{\det\left(2\pi \Sigma_w\right)}} e^{-\frac{1}{2} 
+	\nrmsq{_{\Sigma_w}}{x_k-f(x_{k-1},u_{k-1})}}
+\end{gather}
+\section{}
+\begin{gather}
+	p(x_1\mid z_1, u_0) = \frac{p(z_1\mid x_1)\int_{x_0}p(x_1\mid x_0, 
+	u_0)p(x_0)dx_0}{\int_{x_1, x_0} p(z_1\mid x_1) p(x_1\mid x_0, u_0) 
+	p(x_0)dx_1dx_0 } 
+\end{gather}
+\section{}
+%The integrand in the numerator of the previous clause is a multivariate 
+%Gaussian over 
+%$x_{0:1}$. Marginalization over $x_0$ (the integral) yields a Gaussian over 
+%$x_1$, as was seen at the lecture, with parameters - the corresponding 
+%elements 
+%of the joint mean and covariance. Denote the marginalization result as 
+%$p(x_1) = N(\mu_1^-,\Sigma_1^- )$ (in principle, we're back to the situation 
+%from the previous question. Still - we develop again)
+From previous clause: 
+\begin{gather}
+	x_1^{MAP} \doteq \argmax_{x_1} p(x_1\mid z_1, u_0) = \argmin_{x_1}
+	-\log\left(p(z_1\mid x_1) p(x_1)\right) = \\
+	\argmin_{x_1}\, \nrmsq{_{\Sigma_v}}{z_1-h(x_1)} -\log \int_{x_0} p(x_1\mid 
+	x_0, u_0) p(x_0) dx_0
+\end{gather}
+The integrand has the form of a gaussian, however with the left term exponent 
+with generally nonlinear dependence on $x_0$: 
+\begin{gather}
+	p(x_1\mid 
+		x_0, u_0) p(x_0)\propto \exp 
+		\{-\frac{1}{2}\left(\nrmsq{}{\Sigma_w^{-\frac{1}{2}}\left(x_1-f(x_0,u_0)\right)}+
+		\nrmsq{}{\Sigma_0^{-\frac{1}{2}}\left(x_0-\hat{x}_0\right)}\right)\}
+\end{gather}
+Linearizing $f$ around $\hat{x}_0$, h around $\hat{x}_1 = f(\hat{x}_0, u_0)$: 
+\begin{gather}
+	\approx  \exp 
+			\{-\frac{1}{2}\left(\nrmsq{}{\Sigma_w^{-\frac{1}{2}}\left(\hat{x}_1+H_f(x_0-\hat{x}_0)-x_1\right)}+
+			\nrmsq{}{\Sigma_0^{-\frac{1}{2}}\left(x_0-\hat{x}_0\right)}\right)\}
+			 = \\
+			=  \exp 	
+			\{-\frac{1}{2}\left(\nrmsq{}{\Sigma_w^{-\frac{1}{2}}
+			\begin{pmatrix}
+			H_f & -I
+			\end{pmatrix} \begin{pmatrix}
+			x_0 \\ x_1
+			\end{pmatrix}
+			+ 
+			\Sigma_w^{-\frac{1}{2}}\left(\hat{x}_1-H_f\hat{x}_0\right)} \right. 
+			\\ \left.
+			+ \nrmsq{}{ 
+			\begin{pmatrix}
+				\Sigma_0^{-\frac{1}{2}} & 0 
+			\end{pmatrix}
+			\begin{pmatrix}
+			x_0 \\ x_1
+			\end{pmatrix}			
+			-\Sigma_0^{-\frac{1}{2}}\hat{x}_0}
+			\right) \}
+			\label{eq:integrand-gaussian}
+\end{gather}
+ this term is a 
+Gaussian over $x_{0:1}$, and its marginalization w.r.t. $x_0$ yields a Gaussian 
+in $x_1$ only, and everything collapses to a (linear, if we also marginalize 
+$h$ around $\hat{x}_1$) least-squares problem, of which the solution may be 
+refined by repeated 
+re-linearization as in the previous problem. 
+
+Could probably have a somewhat easier derivation if had marginalized the entire 
+posterior w.r.t. $x_0$. 
+
+\section{}
+Joint covariance $\Sigma_{0:1}$ is of the same size as $x_{0:1}^{ } x_{0:1}^T$ 
+(that is, square, 
+with side the sum of vector dimensions). If $x_0\in \mathbb{R}^n$ and $x_1\in 
+\mathbb{R}^m$ then $\Sigma_{0:1}\in \mathbb{R}^{n+m\times n+m}$, 
+$\Sigma_{00}\in\mathbb{R}^{n\times n}$, $\Sigma_{11}\in\mathbb{R}^{m\times m}$, 
+$\Sigma_{01}\in\mathbb{R}^{n\times m}$. 
+
+Marginalization in covariance form: $\Sigma_1' = \Sigma_{11}$.  Marginalization 
+in information form: $I_1' = I_{11} - I_{01}^TI_{00}^{-1}I_{01}$
+
+We hence continue from \Eqref{eq:integrand-gaussian}. Denoting the integrand's 
+information matrix as $I_{0:1}^-$, we get 
+\begin{gather}
+	I_{0:1}^- = 
+	\begin{pmatrix}
+	H_f^T\Sigma_w^{-1}H_f + \Sigma_0^{-1} & -H_f^T\Sigma_w^{-1} \\
+	-\Sigma_w^{-1}H_f & \Sigma_w^{-1}
+	\end{pmatrix}
+\end{gather}
+Linearizing the "innovation" term around $\hat{x}_1$ we get (denote $H_h$ the 
+Jacobian of $h$ at $\hat{x}_1$)
+\begin{gather}
+	\nrmsq{_{\Sigma_v}}{z_1-h(x_1)} \approx
+	\nrmsq{_{\Sigma_v}}{h(\hat{x}_1) + H_h (x_1-\hat{x}_1) - z_1} =
+	\\
+	= \nrmsq{}{
+	\Sigma_v^{-\frac{1}{2}}\begin{pmatrix}
+	0 & H_h
+	\end{pmatrix}
+	\begin{pmatrix}
+	x_0 \\ x_1
+	\end{pmatrix}
+	+ \Sigma_v^{-\frac{1}{2}}(h(\hat{x}_1) - H_h \hat{x}_1 - z_1)}
+\end{gather}
+This means that the information matrix of the joint distribution is: 
+\begin{gather}
+	I_{0:1} = 	
+	\begin{pmatrix}
+		H_f^T\Sigma_w^{-1}H_f + \Sigma_0^{-1} & -H_f^T\Sigma_w^{-1} \\
+		-\Sigma_w^{-1}H_f & H_h^T\Sigma_v^{-1}H_h + \Sigma_w^{-1}
+		\end{pmatrix}
+\end{gather}
+From here, using marginalization formula: 
+\begin{gather}
+	I_1^\prime = 
+	H_h^T\Sigma_v^{-1}H_h + \Sigma_w^{-1} - 
+	\Sigma_w^{-1}H_f\left(H_f^T\Sigma_w^{-1}H_f + \Sigma_0^{-1}\right)^{-1}
+	H_f^T\Sigma_w^{-1}
+\end{gather}
+And $\Sigma_1^\prime$ is the inverse of the above. 
+\end{document}

@@ -1,0 +1,88 @@
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+
+%\theoremstyle{definition}
+\newtheorem{example}{Example}[section]
+
+
+\definecolor{vadim}{rgb}{1,0.6,0.7}
+\definecolor{yuri}{rgb}{0.6,0.6,1}
+
+\definecolor{marker}{rgb}{1,1,0}
+
+\newcommand{\myputtext}[2]{
+	\begin{tikzpicture}
+	\node [fill=#2, rounded corners=2pt] {#1};
+	\end{tikzpicture}
+}
+%\newcommand{\VI}[1]{\colorbox{vadim}{VI: #1}}
+%\newcommand{\YF}[1]{\colorbox{yuri}{YF:#1}}
+\newcommand{\VI}[1]{{\color{blue} #1}}
+\newcommand{\YF}[1]{{\color{magenta} #1}}
+
+
+\newcommand{\hl}[1]{\colorbox{marker}{#1}}
+
+\newcommand{\Eqref}[1]{Eq.~(\ref{#1})}
+\newcommand{\Figref}[1]{Fig.~\ref{#1}}
+
+
+\newcommand{\Zeta}{\mathrm{Z}}
+\newcommand{\bydef}{\ensuremath{\overset{def}{=}}}
+\newcommand{\maxim}[2]{\ensuremath{\underset{#2}{#1}}}
+\newcommand{\fnorm}[1]{\ensuremath{{\parallel}#1{\parallel_{\cal F}}}} % this removes spacing, could be ugly for final version
+\newcommand{\nrm}[2]{\ensuremath{{\parallel}{#2}{\parallel_{#1}}}}
+\newcommand{\nrmsq}[2]{\ensuremath{{\parallel}{#2}{\parallel^2_{#1}}}}
+\newcommand{\expt}[2]{\ensuremath{\underset{{#1}}{\mathbb E}{\{{#2}\}}}}
+%\newcommand{\alias}[2]{{#1}\odot{#2}}
+\newcommand{\alias}[1]{\ensuremath{\{{#1}\}_{\textbf{aliased}}}}% \xspace}
+%\newcommand{\blf}[1]{\ensuremath{b[#1]}}
+
+\newcommand{\prob}[1]{\ensuremath{\mathbb{P}({#1})}}
+\newcommand{\blf}[1]{\prob{#1}}
+
+
+%\usepackage{textcomp,    % for \textlangle and \textrangle macros
+%            xspace}
+%\newcommand\la{\textlangle\xspace}  % set up short-form macros
+%\newcommand\ra{\textrangle\xspace}
+
+%FIXME!
+\newcommand\la{\langle\xspace}  % set up short-form macros
+\newcommand\ra{\rangle\xspace}
+
+\newcommand*\Let[2]{\State #1 $\gets$ #2}
+\algrenewcommand\algorithmicrequire{\textbf{Input:}}
+\algrenewcommand\algorithmicensure{\textbf{Input:}}
+\algnewcommand{\LineComment}[1]{\State \(\triangleright\) #1}
+
+%new formulation
+\newcommand{\priorB}{\ensuremath{\blf{X^-_{k+1}}}\xspace}
+\newcommand{\condB}{\blf{X_{k+1} \mid z_{k+1}, \his}\xspace}
+\newcommand{\condBi}[1]{\blf{X_{k+1} \mid #1, z_{k+1}, \his}\xspace}
+\newcommand{\event}[1]{\ensuremath{A_{#1}}\xspace}
+
+%spaces
+\newcommand{\poses}{\ensuremath{{\cal X}}\xspace}
+\newcommand{\relpose}{\ensuremath{x^{(rel)}}\xspace}
+\newcommand{\relposes}{\ensuremath{{\cal X}^{(rel)}}\xspace}
+\newcommand{\observations}{\ensuremath{{\cal Z}}\xspace}
+\newcommand{\events}{\ensuremath{\{\event{\mathbb{N}}\}}\xspace}
+\newcommand{\controls}{\ensuremath{{\cal U}}\xspace}
+\newcommand{\landmarks}{\ensuremath{{\cal L}}\xspace}
+
+\newcommand{\classif}{\ensuremath{{\cal S}}\xspace}
+\newcommand{\classes}{\ensuremath{{\cal C}}\xspace}
+
+%history
+\newcommand{\his}{\ensuremath{{\cal H}}\xspace}
+
+% history with relative poses
+\newcommand{\hisrp}{\ensuremath{{H}}\xspace}
+
+%------------------------------------------------
+% Statistical Independence 
+% from http://jblevins.org/log/latex-tips
+\newcommand\independent{\protect\mathpalette{\protect\independenT}{\perp}}
+\def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}}
+%------------------------------------------------
