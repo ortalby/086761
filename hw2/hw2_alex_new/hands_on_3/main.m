@@ -9,7 +9,7 @@ edge_thresh = 8;
 % for matching
 match_threshold = 5;
 
-vizualize_fd = 0;
+vizualize_fd = 1;
 vizualize_matches=1;
 
 
@@ -27,7 +27,7 @@ I2 = imresize(I2,0.3); % resize the image
 I_s2 = single(rgb2gray(I2));
 [f2,d2] = vl_sift(I_s2,'PeakThresh', peak_thresh,'edgethresh', edge_thresh) ; % extract features and descriptors
 
-fprintf('Peak Thr: %2.0f ;\nEdge Thr.: 2.0f\n',peak_thresh, edge_thresh);
+fprintf('Peak Thr: %2.0f\nEdge Thr: %2.0f\n',peak_thresh, edge_thresh);
 fprintf('Features found in Image 1: %2.0f\n',length(f1));
 fprintf('Features found in Image 1: %2.0f\n',length(f2));
 fprintf('\n');
