@@ -1,0 +1,57 @@
+
+% parameters to play with
+% for detection
+peak_thresh = 20;
+edge_thresh = 5;
+% for matching
+match_threshold = 5;
+
+
+vizualize_matches=1;
+
+
+%%
+
+I1 = imread('Image1.jpg');
+I1 = imresize(I1,0.3); % resize the image
+I_s1 = single(rgb2gray(I1));
+[f1,d1] = vl_sift(I_s1) ; % extract features and descriptors
+
+I2 = imread('Image2.jpg');
+I2 = imresize(I2,0.3); % resize the image
+I_s2 = single(rgb2gray(I2));
+[f2,d2] = vl_sift(I_s2) ; % extract features and descriptors
+
+
+vizualize_fd = 0;
+
+
+%%
+% vizualise 50 random frames
+draw_fd
+
+
+%%
+% find the matching features
+% threshold default is 1.5. Try 3.
+
+[matches, scores] = vl_ubcmatch(d1,d2,match_threshold) ;
+
+
+for i=1:length(matches)
+   f1_matched(:,i) = f1(:,matches(1,i));
+   f2_matched(:,i) = f2(:,matches(2,i));
+   d1_matched(:,i) = d1(:,matches(1,i));
+   d2_matched(:,i) = d2(:,matches(2,i)); 
+end
+
+draw_matches
+
+
+
+% choose the matches with smallest scores
+[scores_sorted,indexes] = sort(scores);
+
+
+
+
