@@ -132,6 +132,17 @@ title(sprintf('%d Outlier matches', outliers)) ;
 axis image off ;
 
 
+% plot specific match
+figure(9)
+match_num = 32;
+imagesc([padarray(im1,dh1,'post') padarray(im2,dh2,'post')]) ;
+o = size(im1,2) ;
+line([f1(1,matches(1,match_num));f2(1,matches(2,match_num))+o], ...
+     [f1(2,matches(1,match_num));f2(2,matches(2,match_num))],'LineWidth',4,'Color','r') ;
+
+
+axis image off ;
+
 % --------------------------------------------------------------------
 %                                                               Mosaic
 % --------------------------------------------------------------------

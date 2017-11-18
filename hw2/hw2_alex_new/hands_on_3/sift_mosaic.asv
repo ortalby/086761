@@ -118,17 +118,30 @@ drawnow ;
 
 % plot the outliers
 figure(8)
+outliers =0;
 imagesc([padarray(im1,dh1,'post') padarray(im2,dh2,'post')]) ;
 o = size(im1,2) ;
-for index_points=1:length(f1(1,:))
+for index_points=1:numMatches
     if(ok(index_points)==0)
-line([f1(1,matches(1,index_points));f2(1,matches(2,:))+o], ...
-     [f1(2,matches(1,index_points));f2(2,matches(2,:))]) ;
+        outliers = outliers +1;
+line([f1(1,matches(1,index_points));f2(1,matches(2,index_points))+o], ...
+     [f1(2,matches(1,index_points));f2(2,matches(2,index_points))]) ;
     end
 end
-title(sprintf('%d tentative matches', numMatches)) ;
+title(sprintf('%d Outlier matches', outliers)) ;
 axis image off ;
 
+
+% plot specific match
+figure(9)
+match_num = 31;
+imagesc([padarray(im1,dh1,'post') padarray(im2,dh2,'post')]) ;
+o = size(im1,2) ;
+line([f1(1,matches(1,match_num));f2(1,matches(2,match_num))+o], ...
+     [f1(2,matches(1,match_num));f2(2,matches(2,match_num))],'LineWidth',4,'Color','r') ;
+
+
+axis image off ;
 
 % --------------------------------------------------------------------
 %                                                               Mosaic
