@@ -7,7 +7,7 @@ addpath('vlfeat-0.9.20-bin/vlfeat-0.9.20/toolbox');
 vl_setup;
 
 % for detection
-peak_thresh = 3;
+peak_thresh = 5;
 edge_thresh = 10;
 % for matching
 match_threshold = 5;
@@ -39,6 +39,8 @@ fprintf('\n');
 %%
 % vizualise 50 random frames for each image
 draw_fd
+
+sift_mosaic(I1,I2,peak_thresh,edge_thresh);
 
 representative = 1;
 draw_representative;
