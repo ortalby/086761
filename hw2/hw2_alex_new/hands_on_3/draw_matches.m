@@ -1,6 +1,9 @@
 if vizualize_matches
-
-    figure(3)
+    
+    fig_3 = figure(3);
+    set(fig_3, 'position', [300, 300, 1200, 450] );
+    subplot(1,2,1)
+    %figure(3)
     image(I1)
     h1 = vl_plotframe(f1_matched) ;
     h2 = vl_plotframe(f1_matched) ;
@@ -9,7 +12,8 @@ if vizualize_matches
     h3 = vl_plotsiftdescriptor(d1_matched,f1_matched) ;
     set(h3,'color','g') ;
     
-    figure(4)
+    subplot(1,2,2)
+    %figure(4)
     image(I2)
     h1 = vl_plotframe(f2_matched) ;
     h2 = vl_plotframe(f2_matched) ;
