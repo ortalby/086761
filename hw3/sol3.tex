@@ -1,0 +1,236 @@
+\documentclass[a4paper]{scrreprt}
+
+\input{packages.tex}
+\input{commands.tex}
+
+\title{086761 - Homework 3}
+\author{Yuri Feldman, 309467801 yurif@cs.technion.ac.il \\
+	    Alexander Shender, 328626114 aka.sova@gmail.com }
+\begin{document}
+\maketitle
+\chapter{}
+\section{}
+\begin{gather}
+	\prob{x\mid z_1, z_2} \propto \prob{z_1, z_2\mid x} \prob{x} 
+	= \prob{z_1\mid x} \prob{z_2\mid x} \prob{x} \\
+	\propto e^{-\frac{1}{2}\left(
+	\nrmsq{\Sigma_{_{v_1}}}{z_1-h_1(x)}
+	+\nrmsq{\Sigma_{_{v_2}}}{z_2-h_2(x)}
+	+ \nrmsq{\Sigma_0}{x-\hat{x}_0}
+	\right)}
+\end{gather}
+Linearize the exponent around $\bar{x}$, denote $H_1$, $H_2$ - the Jacobians of 
+$h_1$, $h_2$ respectively at $\bar{x}$: 
+\begin{gather}
+	\nrmsq{\Sigma_{_{v_1}}}{z_1-h_1(x)}
+	+\nrmsq{\Sigma_{_{v_2}}}{z_2-h_2(x)}
+	+ \nrmsq{\Sigma_0}{x-\hat{x}_0}
+	\approx \\
+	\nrmsq{\Sigma_{_{v_1}}}{H_1x+h_1(\bar{x})-H_1\bar{x}-z_1}
+	+\nrmsq{\Sigma_{_{v_2}}}{H_2x+h_2(\bar{x})-H_2\bar{x}-z_2}
+	+ \nrmsq{\Sigma_0}{x-\hat{x}_0}	
+\end{gather}
+The information matrix is the sum of quadratic coefficients (similar to the 
+previous homework): 
+\begin{gather}
+	I = H_1^T\Sigma^{-1}_{v_1}H_1 + H_2^T\Sigma^{-1}_{v_2}H_2 + \Sigma_0^{-1} \\
+	\mu = -I^{-1} 
+	\left(
+	H_1^T\Sigma^{-1}_{v_1}(h_1(\bar{x})-H_1\bar{x}-z_1)
+	+H_2^T\Sigma^{-1}_{v_2}(h_2(\bar{x})-H_2\bar{x}-z_2)
+	-\Sigma_0^{-1}\hat{x}_0
+	\right)
+\end{gather}
+similar to the previous homework, this can be refined by updating linearization 
+point $\bar{x}\gets \mu$ and recalculating Jacobians, until convergence. 
+
+\section{}
+Re-projection error for measurement $z$ given belief over state 
+variables $x$ 
+and $l$ is defined as
+\begin{gather}
+	e = z - \pi\left(\hat{x}, \hat{l}\right),
+\end{gather}
+where 
+\begin{gather}
+	\hat{x},\hat{l} = \argmax_{x,l}\,\blf{x,l\mid z_1, z_2}
+\end{gather}
+
+%Note: wish this had been stated in general at the lectures or clarified as 
+%part 
+%of the 
+%exercise. At 
+%the lectures, reprojection error was handled only as a constraint for 
+%inferring 
+%state. Re-projection error was not defined in the presence of belief. 
+
+
+Joint state belief (prior to measurement $z$): 
+\begin{gather}
+	\prob{x, l \mid z_1, z_2} = \prob{x\mid l, z_2, z_2}\prob{l\mid z_2, z_2} = 
+	\prob{x\mid z_1, z_2}\prob{l}, 
+\end{gather}
+whence
+\begin{gather}
+	\hat{x} = \mu, \enspace \hat{l} = \hat{l}_0 \\
+	e = z-\pi(\mu, \hat{l}_0)
+\end{gather}
+
+\section{}
+\begin{gather}
+	\prob{x,l\mid z_1, z_2, z} = \frac{\prob{z\mid x, l, z_1, z_2} \prob{x, 
+	l\mid z_1, z_2}}{\prob{z\mid z_1, z_2}} = \\
+	= \frac{\prob{z\mid x, l}\prob{x\mid z_1, 
+	z_2}\prob{l}}{\int_{x,l}\prob{z\mid 
+	x, l}\prob{x\mid z_1, z_2}\prob{l}dx dl} 
+	\propto \prob{z\mid x, l}\prob{x\mid z_1, z_2}\prob{l}
+\end{gather}
+
+\section{}
+From previous clause, 
+\begin{gather}
+	-\log (\prob{x,l\mid z, z_1, z_2}) \propto \nrmsq{\Sigma_v}{z-\pi(x,l)} + 
+	\nrmsq{\Sigma}{x-\mu} + \nrmsq{\Sigma_{l0}}{l-\hat{l}_0} + C
+\end{gather}
+With $C$ constant (normalizing factor). Linearizing $\pi$ around $\mu, 
+\hat{l}_0$, and denoting 
+its Jacobian at that 
+point as ${H_\pi = \begin{pmatrix}
+H_\pi^{(x)} & H_\pi^{(l)}
+\end{pmatrix}}$ we can rewrite
+\begin{gather}
+	\approx 
+	\nrmsq{\Sigma_v}{\pi(\mu,\hat{l}_0)+H_\pi^{(x)}(x-\mu)+H_\pi^{(l)}(l-\hat{l}_0)-z}
+	 + \nrmsq{\Sigma}{x-\mu} + \nrmsq{\Sigma_{l0}}{l-\hat{l}_0} + C
+	 \label{eq:1d-joint-log-posterior}
+\end{gather}
+extracting the quadratic term coefficients (recall that variable is the joint 
+state  
+i.e. $(x^T\, l^T)^T$), we get that 
+\begin{gather}
+	= \begin{pmatrix}
+	x^T & l^T
+	\end{pmatrix}
+	\left(
+	H_\pi^T \Sigma_v^{-1} H_\pi
+	+ \begin{pmatrix}
+	\Sigma^{-1} & 0 \\ 0 & \Sigma^{-1}_{l0}
+	\end{pmatrix}
+	\right)
+	\begin{pmatrix}
+		x \\ l
+		\end{pmatrix} + \dots , 
+\end{gather}
+and so
+\begin{gather}
+	I^\prime = H_\pi^T \Sigma_v^{-1} H_\pi
+		+ \begin{pmatrix}
+		\Sigma^{-1} & 0 \\ 0 & \Sigma^{-1}_{l0}
+		\end{pmatrix}
+		= \begin{pmatrix}
+				H_\pi^{(x)T} \Sigma_v^{-1} H_\pi^{(x)} + \Sigma^{-1} & 
+				H_\pi^{(x)T} \Sigma_v^{-1} H_\pi^{(l)} \\ 
+				H_\pi^{(l)T} \Sigma_v^{-1} H_\pi^{(x)} & 
+				H_\pi^{(l)T} \Sigma_v^{-1} H_\pi^{(l)} + \Sigma^{-1}_{l0}
+				\end{pmatrix}
+\end{gather}
+The latter, similar to before, can be refined by iteritavely relinearizing 
+around the minimum point 
+of \Eqref{eq:1d-joint-log-posterior} (calculated e.g. using the linear term, or 
+finding the derivative zero, or formulating as a linear min-squares solution).
+
+To state explicitly, a min squares formulation of 
+\Eqref{eq:1d-joint-log-posterior} is
+\begin{gather}
+\argmin_{x,l}
+	\left\lVert 
+	\underset{A}{\underbrace{
+			\begin{pmatrix}
+				\Sigma_v^{-\frac{1}{2}}H_\pi^{(x)}  
+				& \Sigma_v^{-\frac{1}{2}} H_\pi^{(l)} \\
+				\Sigma^{-\frac{1}{2}} & 0 \\
+				0 & \Sigma^{-\frac{1}{2}}_{l0}
+			\end{pmatrix}
+			}}
+	\begin{pmatrix}
+	x \\ l
+	\end{pmatrix}
+	- 
+	\begin{pmatrix}
+		\Sigma_v^{-\frac{1}{2}}\left(-\pi(\mu,\hat{l}_0)+H_\pi^{(x)}\mu + 
+		H_\pi^{(l)}\hat{l}_0 + z\right) \\
+		\Sigma^{-\frac{1}{2}}\mu \\ \Sigma_{l0}^{-\frac{1}{2}}\hat{l}_0
+	\end{pmatrix} \right\rVert^2, 
+\end{gather}
+whence we obtain the same result for the information matrix ($I^\prime=A^TA$). 
+
+\chapter{}
+\section{}
+Denote camera calibration matrices as $K_1$, $K_2$ respectively. 
+\begin{gather}
+	t\doteq t^{C_2}_{C_1\to C_2} = R_G^{C_2}\cdot(t^G_{C_1\to G}-t^G_{C_2\to 
+	G}) = R_2^T\cdot(t_1-t_2) \\
+	R \doteq R_{C_1}^{C_2} = R_G^{C_2}\cdot R_{C_1}^{G} = R_2^T \cdot R_1
+\end{gather}
+The epipolar constraint: 
+\begin{gather}
+	\begin{pmatrix}
+		z_2^T  & 1
+	\end{pmatrix}
+	K_2^{-T} [t]_\times R K_1^{-1} 
+	\begin{pmatrix}
+		z_1 \\ 1
+	\end{pmatrix}
+	= 0
+\end{gather}
+
+\section{}
+\begin{gather}
+	\prob{x_1, x_2\mid z_2, z_2} \propto \prob{z_1, z_2\mid x_1, x_2} 
+	\prob{x_1} \prob{x_2}
+\end{gather}
+
+Treating the correspondence between $z_1$, $z_2$ as the measurement, we can 
+model likelihood term as 
+\begin{gather}
+	\prob{z_1, z_2\mid x_1, x_2} = \prob{h(x_1, x_2, z_1, z_2)}
+\end{gather}
+where we assume that 
+\begin{gather}
+	\argmax_{x_1, x_2} 	\prob{z_1, z_2\mid x_1, x_2} = 
+	\argmax_{x_1, x_2} \prob{h(x_1, x_2, z_1, z_2)}
+	\intertext{and}
+	h(x_1, x_2, z_1, z_2) \sim N(0, \Sigma_{ep})
+\end{gather}
+with the motivation being that given matching points $z_1$, $z_2$, epipolar 
+constraint should satisfied, up to error, so $h$ should be close to 0. 
+
+In summary, the MAP estimation can be written (in negative log-likelihood form, 
+as before) as 
+\begin{gather}
+	\argmax_{x_1, x_2}\, \prob {x_1, x_2 \mid z_1, z_2} = \\
+	= \argmin_{x_1, x_2}\, \nrmsq{\Sigma_{ep}}{h(x_1, x_2, z_1, z_2)} + 
+	\nrmsq{\Sigma_{01}}{x_1-\mu_{01}} + 
+	\nrmsq{\Sigma_{02}}{x_2-\mu_{02}}
+\end{gather}
+%Note: to our knowledge, residual error has not been mentioned in this course 
+%up 
+%to last lecture before submission (maybe I missed something?). Is this 
+%intended 
+%to penalize students who do not consult with other students when solving the 
+%homework? 
+\chapter{}
+We start from the definition of fundamental matrix from the lecture: 
+\begin{gather}
+	F\doteq K_2^{-T} [t]_\times R K_1^{-1}, 
+\end{gather}
+with $K_{1,2}$, $t$ and $R$ defined as in question 2a. Denote $u = K_1 R^{-1}  
+t$, where $R^{-1}$ exists since $R$ is a rotation matrix. Then
+\begin{gather}
+	F\,u = K_2^{-T} [t]_\times R K_1^{-1} K_1 R^{-1} t = K_2^{-T}\left(t\times 
+	t\right) = 0, 
+\end{gather}
+whence $F$ is singular. 
+
+
+\end{document}
