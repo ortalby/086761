@@ -182,6 +182,11 @@ with side the sum of vector dimensions). If $x_0\in \mathbb{R}^n$ and $x_1\in
 $\Sigma_{00}\in\mathbb{R}^{n\times n}$, $\Sigma_{11}\in\mathbb{R}^{m\times m}$, 
 $\Sigma_{01}\in\mathbb{R}^{n\times m}$. 
 
+We are interested in
+\begin{gather}
+	p(x_1\mid u_0, z_1) = \int_{x_0} p(x_{0:1}\mid u_0, z_1) dx_0
+\end{gather}
+
 Marginalization in covariance form: $\Sigma_1' = \Sigma_{11}$.  Marginalization 
 in information form: $I_1' = I_{11} - I_{01}^TI_{00}^{-1}I_{01}$
 
