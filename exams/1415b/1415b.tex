@@ -1,0 +1,46 @@
+\documentclass[a4paper]{scrreprt}
+
+\input{packages.tex}
+\input{commands.tex}
+
+%% To select R matrix entries
+%\newcommand{\bluex}{\color{blue}\pmb{\times}}
+%\newcommand{\redx}{\color{red}\pmb{\times}}
+
+
+\begin{document}
+\chapter{Question 1}
+Specific calculation question, involving information fusion using Bayes rule 
+(like the drone landing example from lectures).
+
+\chapter{Question 2}
+A moving robot obtains GPS observations $z^{GPS}$ and image observations of a 
+single landmark $z^{im}$ at each time index $t_{0:k}$. 
+\section{}
+Develop the posterior at time $k$
+\section{}
+Draw the corresponding factor graph. Explain in detail what each node and edge 
+correspond to. 
+\section{}
+Assume now that poses are precisely known. Derive posterior and draw factor 
+graph. 
+
+\chapter*{Question 3}
+\section{}
+Camera 6 DoF pose is given $x_1 = (R_1\equiv R_{c_1}^{G}, t_1\equiv t^G_{c_1\to 
+G})$. Landmark in camera coordinate system (3D) is given $l^{c_1}$. Find $l^G$
+
+\section{}
+Another camera $x_2 = (R_{c_2}^{G}, t_2\equiv t^G_{c_2\to 
+G})$ observes landmark $l^G$. 
+\subsection{}
+Write down the ideally projected point (in homogeneous coordinates) 
+$\begin{pmatrix}
+\tilde{u} \\ \tilde{v} \\ \tilde{w}
+\end{pmatrix}$
+
+\subsection{}
+Camera observes landmark at $z_2=\begin{pmatrix}
+u_2\\v_2
+\end{pmatrix}$ What is the reprojection error? 
+\end{document}

@@ -1,0 +1,76 @@
+{\tiny \begin{gather*}
+	v^b = R_a^b v_a + t^b_{b\to a} 
+	~
+	{\tiny\scriptstyle \begin{pmatrix}
+	v^b \\ 1
+	\end{pmatrix}
+	= \begin{pmatrix}
+	R_a^b & t^b_{b\to a} \\
+	0 & 1
+	\end{pmatrix}
+	\begin{pmatrix}
+	v^a \\ 1
+	\end{pmatrix}}
+	\\
+	T_2T_1 = \begin{pmatrix}
+	R_2R_1 & R_2t_1+t_2 \\ 0 & 1
+	\end{pmatrix}, ~ T^{-1} = \begin{pmatrix}
+	R^T & -R^Tt \\ 0 & 1
+	\end{pmatrix}\\
+	{\tiny\scriptstyle R_a^b=\begin{pmatrix}
+		 &  &  \\
+		x_a^b & y_a^b & z_a^b \\
+		 &  &  
+		\end{pmatrix}=
+	\begin{pmatrix}
+	x_a\cdot x_b & y_a\cdot x_b & z_a\cdot x_b \\
+	x_a\cdot y_b & y_a\cdot y_b & z_a\cdot y_b \\
+	x_a\cdot z_b & y_a\cdot z_b & z_a\cdot z_b
+	\end{pmatrix}}% 
+	\\
+	{\tiny {\scriptstyle R_x(\phi) R_y(\theta) R_z(\psi) }= 
+	\begin{pmatrix}
+		1 & 0 & 0 \\ 
+		0 & c_\phi & -s_\phi \\
+		0 & s_\phi & c_\phi 
+	\end{pmatrix}~
+	\begin{pmatrix}
+		c_\theta & 0 & s_\theta \\ 
+		0 & 1 & 0 \\
+		-s_\theta & 0 & c_\theta
+	\end{pmatrix}
+	\begin{pmatrix}
+		c_\psi & -s_\psi & 0 \\ 
+		s_\psi & c_\psi & 0 \\
+		0 & 0 & 1 
+	\end{pmatrix}~
+	} \\
+	{\scriptstyle\tiny \text{convention: } x^G\doteq \left(R_C^G, t^G_{G\to 
+	C}\right)} ~
+	{\scriptstyle \text{re-projection error: }
+	e = z_{observed}-\pi(x_{true}, l_{true})} \\
+	{\tiny\scriptstyle \lambda \begin{pmatrix}
+		u \\ v \\ 1
+		\end{pmatrix} = 
+	\begin{pmatrix}
+	\tilde{u} \\ \tilde{v} \\ \tilde{w}
+	\end{pmatrix} = K\underbrace{
+	\left(\begin{array}{c|c}
+	R_G^C & t^C_{C\to G}
+	\end{array}\right)}_{M}
+	\begin{pmatrix}
+	x^G \\ y^G \\ z^G \\ 1
+	\end{pmatrix} = 
+	M\begin{pmatrix}
+		x^G \\ y^G \\ z^G \\ 1
+		\end{pmatrix}}, ~ {\tiny\scriptstyle K=\begin{pmatrix}
+			\alpha_x & 0 & u_0 \\ 
+			0 & \alpha_y & v_0 \\
+			0 & 0 & 1
+			\end{pmatrix}} \\ 
+	{\scriptstyle\tiny u = \frac{m_{11}x + m_{12}y + m_{13}z + 
+	m_{14}}{m_{31}x + m_{32}y + m_{33}z + m_{34}} \quad 
+	v = \frac{m_{21}x + m_{22}y + m_{23}z + 
+		m_{24}}{m_{31}x + m_{32}y + m_{33}z + m_{34}}} \\
+	\text{\tiny $a_{x,y} = fk_{x,y}$, $u_0$, $v_0$ - PP in pixels}\hfill
+\end{gather*}}

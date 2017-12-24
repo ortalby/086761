@@ -1,0 +1,49 @@
+\documentclass[a4paper]{scrreprt}
+
+\input{packages.tex}
+\input{commands.tex}
+
+%% To select R matrix entries
+%\newcommand{\bluex}{\color{blue}\pmb{\times}}
+%\newcommand{\redx}{\color{red}\pmb{\times}}
+
+\begin{document}
+\chapter{Question 1}
+Moving robot gets odometry measurements at each step. Additionally, gets image 
+observations of a single landmark at time steps 1 and 4. 
+\section{}
+Develop posterior at time 4 in terms of measurement and motion models, assume 
+prior exists for $x_1$
+\section{} 
+Draw corresponding factor graph. Detail what every node and edge correspond to. 
+\section{}
+Eliminate factor graph into a Bayes net, assuming elimination order $x_1$, 
+$x_2$, $x_3$, $x_4$, $l$. Detail your calculations. Draw obtained Bayes net and 
+square root information R matrix sparsity pattern.
+
+\chapter{Question 2}
+Given: 
+\begin{itemize}
+\item camera 6 DoF pose $R_C^G$, $t_{G\to C}^G$
+\item camera calibration matrix $K$
+\item landmark $l^G$ \textbf{given} (in global frame)
+\end{itemize}
+\section{}
+Develop projection matrix $M^r$ for camera $r$, 
+note all dimensions. 
+
+\section{}
+Express projected pixel coordinates $\begin{pmatrix}
+u \\ v 
+\end{pmatrix}$ of a point $\begin{pmatrix}
+x\\y\\z
+\end{pmatrix}^G$
+in terms of $M^r$ components. 
+
+\section{}
+Given $n$ observations of the landmark $\{(u_i, v_i)\}_{i=1}^n$ and the 
+corresponding camera projection matrices $M^i$, describe a way 
+to estimate it. 
+\section{}
+Failed to reverse engineer
+\end{document}

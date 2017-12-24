@@ -1,0 +1,74 @@
+\documentclass[a4paper]{scrreprt}
+
+\input{packages.tex}
+\input{commands.tex}
+
+%% To select R matrix entries
+%\newcommand{\bluex}{\color{blue}\pmb{\times}}
+%\newcommand{\redx}{\color{red}\pmb{\times}}
+
+
+\begin{document}
+\chapter{Question 1}
+A single landmark $l^G=\begin{pmatrix}
+x\\y\\z
+\end{pmatrix}$ is observed by two cameras with projection matrices $M$ and 
+$M'$ at pixel coordinates $\begin{pmatrix}
+u \\v
+\end{pmatrix}$ and $\begin{pmatrix}
+u' \\v'
+\end{pmatrix}$ respectively. 
+\section{a}
+Write a linear system of equations to estimate 
+landmark from the two measurements, when:
+\subsection{}
+$M$ and $M^\prime$ are given in the world coordinate system
+\subsection{}
+in the left camera coordinates when only calibration matrices $K$ and 
+$K^\prime$ are given, and cameras are $b_s$ centimetres apart in the x axis, 
+(camera x axes correspond). 
+
+\section{b}
+Now we assume a camera observes $n$ landmarks $\{l_i = \begin{pmatrix}
+x_i\\y_i\\z_i
+\end{pmatrix}\}_{i=1}^n$ at corresponding pixel coordinates $\{u_i, 
+v_i\}_{i=1}^n$. 
+
+\subsection{}
+Write a homogeneous linear system to estimate camera matrix 
+$M$. State a way to find a (non-trivial) solution to the system. 
+
+\subsection{}
+Suppose now that camera calibration matrix $K$ is known. Calculate camera 6 DoF 
+pose. 
+
+\chapter{Question 2}
+A robot moves from (unknown) pose $x_0$ to $x_1$ and obtains observation $z_1$ 
+of a landmark. 
+\section{a}
+Assuming standard observation and motion models, write posterior over 
+$x_{0:1}$, $l$ in terms of the models. 
+
+\section{b}
+Draw the corresponding factor graph. Explain in detail to what each node and 
+edge in the graph corresponds. 
+
+\section{c}
+Eliminating $x_1$ according to the procedure learned in class, write down the 
+posterior, draw the new factor graph and Bayes net obtained as a result. 
+
+\section{d}
+Assuming linear observation and motion models
+\begin{gather}
+	x_{k+1} = x_k+F_ku_k+w \\
+	z_k(x_k, l_i) = H_kx_k +J_kl_i + v , 
+\end{gather}
+where $w$ and $v$ are Gaussian noise: 
+\subsection{}
+Solve the smoothing problem. 
+
+\subsection{}
+Show how to obtain estimates and uncertainties for each of $x_{0:1}$, $l$ from 
+above solution. 
+
+\end{document}

@@ -1,0 +1,116 @@
+\documentclass[a4paper,twocolumn]{scrreprt}
+
+\input{packages.tex}
+\input{commands.tex}
+
+%% To select R matrix entries
+%\newcommand{\bluex}{\color{blue}\pmb{\times}}
+%\newcommand{\redx}{\color{red}\pmb{\times}}
+
+\begin{document}
+TO ADD: euler vector to matrix and 
+back, inverse of coord system transform, quaternions, transformation 
+composition, 3d transformation types, solve bayes specific example, feature 
+detection, 
+RANSAC
+\paragraph*{Probability and Gaussian Identities}
+{\tiny
+\begin{gather*}
+	x\sim N\left(\mu_x, \Sigma_x\right)~y=Ax+b 
+	\Longrightarrow \mu_y = A\mu_x + b~\Sigma_y = 
+	A\Sigma_x A^T  \\
+	\sum_i \nrmsq{\Sigma_i}{A_ix\pm B_i} = 
+	\nrmsq[\bigg]{}{\begin{pmatrix}
+	\vert \\ \Sigma_i^{-\frac{1}{2}}A_i \\ \vert
+	\end{pmatrix}x \pm 
+	{\begin{pmatrix}
+		\vert \\ \Sigma_i^{-\frac{1}{2}}B_i \\ \vert
+		\end{pmatrix}
+		}} \\
+	I=\sum_i A_i^T\Sigma_i^{-1}A_i, \quad \mu = \mp I^{-1}\cdot \sum_i A_i^T 
+		\Sigma_i^{-1}B_i \\
+	x\sim N(x;\mu, \Sigma)=	N^{-1}(x; \eta, \Lambda),~ \Lambda \doteq 
+	\Sigma^{-1},~ 
+	\eta \doteq \Lambda\mu \\
+	N^{-1}(x; \eta, \Lambda) = 
+		\frac{\exp\left(-\frac{1}{2}\eta^T\Lambda^{-1}\eta\right)}
+		{\sqrt{\det\left(2\pi\Lambda^{-1}\right)}} \exp 
+		\left(-\frac{1}{2}x^T\Lambda x + \eta^T x\right)
+\end{gather*}
+
+\includegraphics[width=0.8\linewidth]{cond-marg.png} 
+}
+\paragraph*{Matrix identities}
+{\tiny
+\begin{gather*}
+	[t]_\times \doteq \begin{pmatrix}
+	0 & -t_3 & t_2 \\
+	t_3 & 0 & -t_1 \\
+	-t_2 & t_1 & 0
+	\end{pmatrix}, ~ J=\begin{pmatrix}
+			\dots & \frac{\partial f_1}{\partial x_i} & \dots  \\
+				  & \dots & \\
+			\dots & \frac{\partial f_n}{\partial x_i} & \dots 
+			\end{pmatrix} = 
+			\begin{pmatrix}
+			\vert \\ (\nabla f_i)^T \\ \vert
+			\end{pmatrix} \\
+	\nrmsq{\Sigma}{a} = \nrmsq{}{\Sigma^{-1/2}a},~ \quad \Sigma^{-1} = 
+	\Sigma^{-T/2}\Sigma^{-1/2}, ~ A^\dagger = \left(A^TA\right)^{-1} A^T\\
+		f(x)=f(x_0) + J (x-x_0)+o(\nrmsq{}{\Delta x}) \\
+	\text{SVD: } A = U D V^\ast, ~ \text{columns of $U$, $V$ - ort. 
+	eigenvectors of $MM^\ast$ and $M^\ast M$} \\
+	\text{QR: } \mathcal{A}\Delta\Theta = \breve{b}, ~ Q^T\mathcal{A} = 
+	\begin{bmatrix}
+	R \\ 0
+	\end{bmatrix}, ~Q^T\breve{b} = \begin{bmatrix}
+	d \\ e
+	\end{bmatrix}
+\end{gather*}
+}
+
+\paragraph*{Pose and Geometry}
+\input{pose-and-geometry.tex}
+\includegraphics[width=0.4\linewidth]{pinhole.png} 
+\includegraphics[width=0.4\linewidth]{epipolar.png} 
+
+\paragraph*{Epipolar Geometry}
+{\tiny
+\begin{gather*}
+	q_1\triangleq K_1^{-1}x_1 ~	q_2 \triangleq K_2^{-1}x_2 \quad 
+	\text{Epipolar constraint: } q_2^T[t^2_{2\to 1}]_\times R_1^2 q_1 = 0 \\
+	\text{Essential M: } E = [t]_\times R \in \mathbb{R}^{3\times 3}~
+	\text{Fundamental M: } E = K_2^{ T} F K_1 \\
+	\text{F estimation: } 
+	\begin{pmatrix}
+	x \\ y \\ 1
+	\end{pmatrix}^T F
+	\begin{pmatrix}
+	x^\prime \\ y^\prime \\ 1
+	\end{pmatrix} = 0, ~
+	\left(x^\prime x, x^\prime y, x^\prime, y^\prime x, y^\prime y, y^\prime, 
+	x, y, 1\right) \bm{f} = 0
+\end{gather*}
+
+\includegraphics[width=0.8\linewidth]{fundamental.png} 
+}
+
+\paragraph*{Kalman Filter}
+{\tiny
+\begin{gather*}
+	x_{k+1} = A_kx_k+B_ku_k+\omega_k, ~ z_k = H_kx_k+v_k \\
+%	x_k\in\mathbb{R}^{n\times 1},~u_k\in\mathbb{R}^{p\times 1}, ~ 
+%	z_k\in\mathbb{R}^{m\times 1}, ~F_k\in\mathbb{R}^{n\times n}, ~B_k\in 
+%	\mathbb{R}^{n\times p}, ~ H_k\in\mathbb{R}^{m\times n}
+\end{gather*}
+\includegraphics[width=0.7\linewidth]{kalman.png} 
+}
+\paragraph*{SLAM}
+\begin{gather*}
+\end{gather*}
+\includegraphics[width=0.8\linewidth]{bundle.png} 
+\includegraphics[width=0.8\linewidth]{sam.png} 
+\includegraphics[width=0.6\linewidth]{incremental.png} 
+
+
+\end{document}
